@@ -1,0 +1,41 @@
+modLoader="javafml"
+loaderVersion="[21.1.219,)"
+license="MIT"
+
+[[mods]]
+modId="phantomstaff"
+version="1.0.0"
+displayName="Phantom Staff Slot"
+description="纯客户端虚拟物理法杖槽位（面向无服务端校验的旧版 Create Aeronautics 服务器）"
+
+# NeoForge 必须声明 mixin 配置文件才会加载
+[[mixins]]
+config="phantomstaff.mixins.json"
+
+[[dependencies.phantomstaff]]
+modId="neoforge"
+type="required"
+versionRange="[21.1.219,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.phantomstaff]]
+modId="create"
+type="required"
+versionRange="[6.0.10,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.phantomstaff]]
+modId="simulated"
+type="required"
+versionRange="[1.0,)"
+ordering="NONE"
+side="CLIENT"
+
+[[dependencies.phantomstaff]]
+modId="mafglib"
+type="required"
+versionRange="[0.4,)"
+ordering="NONE"
+side="CLIENT"

@@ -1,0 +1,15 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.phantomstaff.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "PlayerMixin",
+    "PlayerInventoryMixin",
+    "MouseHandlerMixin",
+    "InGameHudMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
