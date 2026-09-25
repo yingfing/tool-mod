@@ -4,7 +4,7 @@ license="MIT"
 
 [[mods]]
 modId="phantomstaff"
-version="1.0.0"
+version="1.10.0"
 displayName="Phantom Staff Slot"
 description="纯客户端虚拟物理法杖槽位（面向无服务端校验的旧版 Create Aeronautics 服务器）"
 
