@@ -1,10 +1,11 @@
 package com.phantomstaff;
 
-import com.phantomstaff.input.SlotKeyHandler;
 import com.phantomstaff.render.TargetLineRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,9 @@ public class PhantomStaffMod {
         PhantomStaffConfig.getInstance().init();
         // 注册世界渲染事件：追踪红线
         NeoForge.EVENT_BUS.register(TargetLineRenderer.class);
-        // 数字键 0 直接选中虚拟第10格
-        NeoForge.EVENT_BUS.register(SlotKeyHandler.class);
-        // 加入服务器时的 Aeronautics 兼容性检测与提示
-        NeoForge.EVENT_BUS.register(ServerCompatCheck.class);
+        // 在 Forge 的「Mods」界面为本体注册配置入口，保证始终能打开配置（不依赖热键是否绑定）
+        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
+                () -> (mc, parent) -> new PhantomStaffGuiConfig(parent));
         // 启动期兼容性自检与日志
         logCompatibility();
     }
@@ -37,12 +37,12 @@ public class PhantomStaffMod {
      * 避免用户误以为模组失效却无从排查。
      */
     private void logCompatibility() {
-        LOG.info("[PhantomStaff] Phantom Staff Slot 已加载（纯客户端 NeoForge 模组）");
+        LOG.info("[PhantomStaff] Phantom Staff 已加载（纯客户端 NeoForge 模组）");
         if (PhantomStaff.PHANTOM_STAFF.isEmpty()) {
-            LOG.warn("[PhantomStaff] 未检测到 Create Aeronautics 的物理法杖物品，虚拟第10格不会生效。"
-                    + "请确认已安装旧版(2026-05-13 之前、服务端无 validateWorthyness 校验)的 Create Aeronautics。");
+            LOG.warn("[PhantomStaff] 未检测到 Create Aeronautics 的物理法杖物品 simulated:creative_physics_staff，"
+                    + "针对物理结构的高亮/红线/边缘箭头不会生效。请确认已安装 Create Aeronautics。");
         } else {
-            LOG.info("[PhantomStaff] 已识别物理法杖物品 simulated:creative_physics_staff，虚拟槽位可用。");
+            LOG.info("[PhantomStaff] 已识别物理法杖物品 simulated:creative_physics_staff，物理结构辅助功能可用。");
         }
     }
 }

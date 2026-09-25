@@ -34,22 +34,6 @@ import java.util.List;
  */
 public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvider {
 
-    /** 总开关：关闭后虚拟槽位完全不出现 */
-    public static final ConfigBoolean ENABLE_PHANTOM_SLOT =
-            new ConfigBoolean("enable_phantom_slot", true).apply("phantomstaff.config");
-
-    /** 允许滚轮滚到第10格 */
-    public static final ConfigBoolean ALLOW_SCROLL_TO_SLOT_10 =
-            new ConfigBoolean("allow_scroll_to_slot_10", true).apply("phantomstaff.config");
-
-    /** 在热栏上渲染第10格图标 */
-    public static final ConfigBoolean RENDER_VIRTUAL_SLOT =
-            new ConfigBoolean("render_virtual_slot", true).apply("phantomstaff.config");
-
-    /** 加入服务器时检测到 Aeronautics 后的兼容性提示 */
-    public static final ConfigBoolean WARN_ON_AERONAUTICS_SERVER =
-            new ConfigBoolean("warn_on_aeronautics_server", true).apply("phantomstaff.config");
-
     /** 红线核心颜色（ARGB） */
     public static final ConfigColor TARGET_LINE_COLOR =
             new ConfigColor("target_line_color", "#FFFF1414").apply("phantomstaff.config");
@@ -74,9 +58,9 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
     public static final ConfigBoolean TARGET_LINE_HIGHLIGHT =
             new ConfigBoolean("target_line_highlight", true).apply("phantomstaff.config");
 
-    /** 打开配置菜单的快捷键（默认未绑定，可在菜单里自己设） */
+    /** 打开配置菜单的快捷键（默认 G 键；也可在菜单里改成别的） */
     public static final ConfigHotkey OPEN_CONFIG_GUI =
-            new ConfigHotkey("open_config_gui", "").apply("phantomstaff.config");
+            new ConfigHotkey("open_config_gui", "G").apply("phantomstaff.config");
 
     /** 开关追踪红线的快捷键（默认未绑定） */
     public static final ConfigHotkey TOGGLE_TARGET_LINE =
@@ -86,10 +70,6 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
     private static final List<ConfigHotkey> HOTKEYS = new ArrayList<>();
 
     static {
-        GENERIC_OPTIONS.add(ENABLE_PHANTOM_SLOT);
-        GENERIC_OPTIONS.add(ALLOW_SCROLL_TO_SLOT_10);
-        GENERIC_OPTIONS.add(RENDER_VIRTUAL_SLOT);
-        GENERIC_OPTIONS.add(WARN_ON_AERONAUTICS_SERVER);
         GENERIC_OPTIONS.add(TARGET_LINE_COLOR);
         GENERIC_OPTIONS.add(TARGET_LINE_WIDTH);
         GENERIC_OPTIONS.add(TARGET_LINE_MAX_DIST);

@@ -7,9 +7,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 虚拟物理法杖。
- * 物品ID 已经过源码核实：SimItems 中 REGISTRATE.item("creative_physics_staff", ...)，
- * Create Aeronautics 的 modid 为 simulated，因此完整 ID 为 simulated:creative_physics_staff。
+ * 物理法杖物品引用（Create Aeronautics 的 simulated:creative_physics_staff）。
+ * 仅用于在启动时检测 Aeronautics 是否已安装；本模组不再伪造/替换该物品。
+ * 物品ID 已核实：Create Aeronautics 的 modid 为 simulated，完整 ID 为 simulated:creative_physics_staff。
  */
 public final class PhantomStaff {
     public static final Logger LOG = LoggerFactory.getLogger("phantomstaff");

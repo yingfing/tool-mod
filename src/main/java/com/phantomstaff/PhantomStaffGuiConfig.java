@@ -22,12 +22,6 @@ public class PhantomStaffGuiConfig extends GuiConfigsBase {
     public List<ConfigOptionWrapper> getConfigs() {
         List<ConfigOptionWrapper> list = new ArrayList<>();
 
-        list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.general")));
-        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ENABLE_PHANTOM_SLOT));
-        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ALLOW_SCROLL_TO_SLOT_10));
-        list.add(new ConfigOptionWrapper(PhantomStaffConfig.RENDER_VIRTUAL_SLOT));
-        list.add(new ConfigOptionWrapper(PhantomStaffConfig.WARN_ON_AERONAUTICS_SERVER));
-
         list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.target_line")));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_COLOR));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_WIDTH));
