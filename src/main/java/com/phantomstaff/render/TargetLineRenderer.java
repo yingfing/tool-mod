@@ -15,6 +15,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.client.DeltaTracker;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
@@ -39,7 +40,8 @@ public class TargetLineRenderer {
         Level level = mc.level;
         if (player == null || level == null || mc.screen != null) return;
 
-        float partialTick = event.getPartialTick();
+        // getPartialTick() 返回 vanilla DeltaTracker，渲染用的部分刻度需取 float
+        float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
         Vec3 eye = player.getEyePosition(partialTick);
 
         Vec3 target = findTarget(mc, player, eye, partialTick);
@@ -89,12 +91,12 @@ public class TargetLineRenderer {
         if (entityHit != null) {
             Entity e = entityHit.getEntity();
             // 用实体平滑位置 + 包围盒中心，线始终贴在结构中心
-            Vec3 pos = e.getLerpedPos(partialTick);
+            Vec3 pos = e.getPosition(partialTick);
             return new Vec3(pos.x, pos.y + e.getBbHeight() / 2.0, pos.z);
         }
 
         // 兜底：方块视线命中
-        BlockHitResult blockHit = player.level.clip(
+        BlockHitResult blockHit = player.level().clip(
                 new ClipContext(eye, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
         if (blockHit != null && blockHit.getType() != HitResult.Type.MISS) {
             return blockHit.getLocation();

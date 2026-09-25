@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
  * Create Aeronautics 的 modid 为 simulated，因此完整 ID 为 simulated:creative_physics_staff。
  */
 public final class PhantomStaff {
-    private static final Logger LOG = LoggerFactory.getLogger("phantomstaff");
+    public static final Logger LOG = LoggerFactory.getLogger("phantomstaff");
 
     public static final ResourceLocation STAFF_ID =
             ResourceLocation.fromNamespaceAndPath("simulated", "creative_physics_staff");
