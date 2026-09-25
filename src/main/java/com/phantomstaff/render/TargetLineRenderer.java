@@ -43,8 +43,16 @@ import java.util.OptionalDouble;
  */
 public class TargetLineRenderer {
 
-    /** 由配置里的开关热键切换 */
-    public static boolean enabled = false;
+    /**
+     * 追踪红线总开关。
+     *
+     * <p><b>必须每帧从配置实时读取</b>，不能用静态布尔缓存：MaLiLib 的配置界面里改值并保存后
+     * 不会回调任何监听器，缓存字段会永远停留在启动时的值，导致「界面里打开了却没反应」。
+     * 每帧读一次配置项代价可忽略，换来的是界面/热键/配置文件三种途径改动都立即生效。</p>
+     */
+    private static boolean isEnabled() {
+        return com.phantomstaff.PhantomStaffConfig.TARGET_LINE_ENABLE.getBooleanValue();
+    }
 
     /** 本帧是否锁定到了至少一个物理结构（供 HUD 文字提示使用） */
     public static boolean foundPhysics = false;
@@ -106,7 +114,7 @@ public class TargetLineRenderer {
     public static void onRenderLevel(RenderLevelStageEvent event) {
         // 只在最后一个阶段画一次，避免每个阶段重复绘制导致发光层叠加过亮
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) return;
-        if (!enabled) return;
+        if (!isEnabled()) return;
         // 本帧默认未锁定物理结构；命中后下方会置 true
         foundPhysics = false;
 
@@ -181,7 +189,7 @@ public class TargetLineRenderer {
     /** HUD：屏幕边缘指向箭头（屏幕外/背后的物理结构）+ 准星上方距离文字 */
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent.Post event) {
-        if (!enabled) return;
+        if (!isEnabled()) return;
 
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
@@ -345,9 +353,27 @@ public class TargetLineRenderer {
         drawSeg(buffers, pose, p110, p111, type, r, g, b, a);
     }
 
-    /** 字符串匹配 Aeronautics 物理实体类名，避免编译期硬依赖 */
+    /**
+     * 字符串匹配 Aeronautics 物理实体类名，避免编译期硬依赖。
+     *
+     * <p>两个修正：
+     * <ol>
+     *   <li>结果按实体类缓存（{@link ClassValue}）：原先每帧对每个实体都做一次
+     *       {@code getName().toLowerCase()}——上百个实体 × 60 帧 = 每秒上万次字符串分配。</li>
+     *   <li>显式排除 {@code com.simibubi.create} 包：Create 自己的载具类名就带
+     *       {@code Contraption}，不排除的话每个机械装置/矿车都会被误判成物理结构画上红线。</li>
+     * </ol>
+     */
+    private static final ClassValue<Boolean> PHYSICS_CACHE = new ClassValue<>() {
+        @Override
+        protected Boolean computeValue(Class<?> type) {
+            String name = type.getName().toLowerCase(Locale.ROOT);
+            if (name.startsWith("com.simibubi.create")) return Boolean.FALSE;
+            return name.contains("physics") || name.contains("contraption");
+        }
+    };
+
     private static boolean isPhysicsEntity(Entity e) {
-        String name = e.getClass().getName().toLowerCase();
-        return name.contains("physics") || name.contains("contraption");
+        return PHYSICS_CACHE.get(e.getClass());
     }
 }

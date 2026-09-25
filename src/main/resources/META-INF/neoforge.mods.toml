@@ -15,17 +15,20 @@ versionRange="[21.1.219,)"
 ordering="NONE"
 side="CLIENT"
 
+# Create / Create Aeronautics 都是「可选」：代码里对两者都做了运行时探测与降级
+# （找不到物理法杖物品就提示并停用幽灵法杖槽位），因此不该在启动期硬拒绝加载。
+# 版本范围也放宽——写死的 [6.0.10,) / [1.0,) 一旦与实际安装版本不符会直接拒绝进游戏。
 [[dependencies.phantomstaff]]
 modId="create"
-type="required"
-versionRange="[6.0.10,)"
+type="optional"
+versionRange="[6.0,)"
 ordering="NONE"
 side="CLIENT"
 
 [[dependencies.phantomstaff]]
 modId="simulated"
-type="required"
-versionRange="[1.0,)"
+type="optional"
+versionRange="[0.1,)"
 ordering="NONE"
 side="CLIENT"
 

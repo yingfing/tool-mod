@@ -6,21 +6,9 @@
   "phantomstaff.config.category.phantom_slot": "幽灵法杖槽位",
   "phantomstaff.config.category.hotkeys": "快捷键",
 
-  "phantomstaff.config.name.enable_phantom_slot": "启用虚拟第10格",
-  "phantomstaff.config.prettyName.enable_phantom_slot": "启用虚拟第10格",
-  "phantomstaff.config.comment.enable_phantom_slot": "显示并启用虚拟第10格（物理法杖槽位）。",
-
-  "phantomstaff.config.name.allow_scroll_to_slot_10": "允许滚轮到第10格",
-  "phantomstaff.config.prettyName.allow_scroll_to_slot_10": "允许滚轮到第10格",
-  "phantomstaff.config.comment.allow_scroll_to_slot_10": "允许鼠标滚轮循环选中虚拟第10格。",
-
-  "phantomstaff.config.name.render_virtual_slot": "渲染第10格图标",
-  "phantomstaff.config.prettyName.render_virtual_slot": "渲染第10格图标",
-  "phantomstaff.config.comment.render_virtual_slot": "在热栏上渲染虚拟第10格图标。",
-
-  "phantomstaff.config.name.warn_on_aeronautics_server": "Aeronautics 服务器提示",
-  "phantomstaff.config.prettyName.warn_on_aeronautics_server": "Aeronautics 服务器提示",
-  "phantomstaff.config.comment.warn_on_aeronautics_server": "加入装有 Create Aeronautics 的服务器后弹出一次兼容性提醒。",
+  "phantomstaff.config.name.target_line_enable": "启用追踪红线",
+  "phantomstaff.config.prettyName.target_line_enable": "启用追踪红线",
+  "phantomstaff.config.comment.target_line_enable": "追踪红线总开关（默认关闭）。在这里直接开关即可，无需绑定任何按键；另可给「开关追踪红线」绑一个键作为快捷方式。",
 
   "phantomstaff.config.name.target_line_color": "红线颜色",
   "phantomstaff.config.prettyName.target_line_color": "红线颜色",
@@ -38,17 +26,13 @@
   "phantomstaff.config.prettyName.target_line_through_walls": "红线常显（穿透地形）",
   "phantomstaff.config.comment.target_line_through_walls": "红线始终穿透地形显示；关闭后被方块遮挡。",
 
-  "phantomstaff.config.name.open_config_gui": "打开配置菜单",
-  "phantomstaff.config.prettyName.open_config_gui": "打开配置菜单",
-  "phantomstaff.config.comment.open_config_gui": "打开 Phantom Staff 配置菜单的快捷键。",
+  "phantomstaff.config.name.target_line_edge_arrows": "屏幕边缘指向箭头",
+  "phantomstaff.config.prettyName.target_line_edge_arrows": "屏幕边缘指向箭头",
+  "phantomstaff.config.comment.target_line_edge_arrows": "屏幕外或位于背后的物理结构，在屏幕边缘画一个指向它的箭头，保证「不漏标」。关闭后只保留 3D 红线。",
 
-  "phantomstaff.config.name.toggle_target_line": "开关追踪红线",
-  "phantomstaff.config.prettyName.toggle_target_line": "开关追踪红线",
-  "phantomstaff.config.comment.toggle_target_line": "开关物理结构追踪红线的快捷键。",
-
-  "phantomstaff.config.name.target_line_enable": "启用追踪红线",
-  "phantomstaff.config.prettyName.target_line_enable": "启用追踪红线",
-  "phantomstaff.config.comment.target_line_enable": "追踪红线总开关。在配置界面里直接开关即可，无需绑定任何按键。另可给 toggle_target_line 绑一个键作为快速切换的快捷方式。",
+  "phantomstaff.config.name.target_line_highlight": "高亮物理结构",
+  "phantomstaff.config.prettyName.target_line_highlight": "高亮物理结构",
+  "phantomstaff.config.comment.target_line_highlight": "在物理结构的包围盒上画发光轮廓框，便于远距离或小目标定位。",
 
   "phantomstaff.config.name.enable_phantom_slot": "启用幽灵法杖槽位",
   "phantomstaff.config.prettyName.enable_phantom_slot": "启用幽灵法杖槽位",
@@ -58,5 +42,15 @@
   "phantomstaff.config.prettyName.phantom_slot_toggle": "切换/换回幽灵法杖",
   "phantomstaff.config.comment.phantom_slot_toggle": "把法杖换到手上 / 换回原物品（默认 B）。",
 
-  "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] 服务器运行 Create Aeronautics。幽灵法杖槽位依赖「老版服务端信任客户端」的特性，新版服务端可能会拒绝法杖操作。"
+  "phantomstaff.config.name.open_config_gui": "打开配置菜单",
+  "phantomstaff.config.prettyName.open_config_gui": "打开配置菜单",
+  "phantomstaff.config.comment.open_config_gui": "打开 Phantom Staff 配置菜单的快捷键（默认 G）。",
+
+  "phantomstaff.config.name.toggle_target_line": "开关追踪红线",
+  "phantomstaff.config.prettyName.toggle_target_line": "开关追踪红线",
+  "phantomstaff.config.comment.toggle_target_line": "开关追踪红线的快捷键（默认未绑定，仅为可选的快捷方式）。",
+
+  "phantomstaff.hud.locked_distance": "物理结构 %.1f 米",
+
+  "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] 服务器运行 Create Aeronautics。幽灵法杖槽位通过原版网络包真实切换物品，服务端会认可你手中的法杖。"
 }
