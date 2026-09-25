@@ -51,7 +51,7 @@
    - 滚轮可达第 10 格 `allow_scroll_to_slot_10`
    - HUD 渲染第 10 格 `render_virtual_slot`
    - 配置保存在 `config/phantomstaff.json`。
-5. **追踪红线**：绑定 `toggle_target_line` 快捷键后，按一下开启、再按关闭。开启时从你眼睛射出一道红线，自动锁定视线所指的 Aeronautics 物理结构（载具移动线会跟着走）；没对准实体时线指向你看到的方块。
+5. **追踪红线**：绑定 `toggle_target_line` 快捷键后，按一下开启、再按关闭。开启时从你眼睛向**所有已加载**（服务器数据包已下发）的 Aeronautics 物理结构各画一道红线——**不要求瞄准、不要求在视锥内、不要求被渲染**；红线穿透地形始终可见（目标在地下或隔墙也能看见）。屏幕外、或在相机背后的结构，会在**屏幕边缘画一个指向它的箭头**，保证不漏标；准星上方显示最近结构的距离。没有物理结构时，线退化为指向视线命中的方块。
 
 ---
 
@@ -86,7 +86,7 @@ GitHub Actions 自动构建：推送到 `1.21.1` 分支即触发，产物 jar �
 
 - 仅支持 Minecraft 1.21.1 / NeoForge 21.1.x，未做其他版本适配。
 - 强依赖「服务端不校验手持物品」的漏洞，新版 Aeronautics 下不可用（见兼容性警告）。
-- 追踪红线的颜色、长度目前为硬编码，未暴露到配置。
+- 追踪红线的颜色、线宽、最大距离、是否穿透地形均已暴露到 MaFgLib 配置（`target_line_color` / `target_line_width` / `target_line_max_distance` / `target_line_through_walls`）。
 - 未提供 `en_us` 等多语言文件。
 - 更多计划见 [ROADMAP.md](ROADMAP.md)。
 

@@ -4,12 +4,17 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.BufferUploader;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.RenderSystem;
 import net.minecraft.client.renderer.RenderType;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -35,6 +40,8 @@ import java.util.OptionalDouble;
  * - 关闭深度测试时，红线穿透地形/方块始终可见（目标在地下或隔墙也能看见）
  * - 三层绘制：黑色外描边 + 红色叠加发光 + 亮红核心，远距离也醒目
  * - 锁定到物理结构时，在准星上方显示最近一个的距离文字提示
+ * - 屏幕边缘箭头：屏幕外或被遮挡在背后的物理结构，在屏幕边缘画一个指向它的箭头，
+ *   保证“不漏标”——视线里看不到的，也能从边缘知道方位
  */
 public class TargetLineRenderer {
 
@@ -168,22 +175,123 @@ public class TargetLineRenderer {
         return Math.max(0, Math.min(255, v));
     }
 
-    /** HUD 文字提示：锁定到物理结构时，在准星上方显示最近一个的距离 */
+    /** HUD：屏幕边缘指向箭头（屏幕外/背后的物理结构）+ 准星上方距离文字 */
     @SubscribeEvent
     public static void onRenderGui(RenderGuiEvent.Post event) {
-        if (!enabled || !foundPhysics) return;
+        if (!enabled) return;
 
         Minecraft mc = Minecraft.getInstance();
-        GuiGraphics g = event.getGuiGraphics();
-        String text = fi.dy.masa.malilib.util.StringUtils.translate(
-                "phantomstaff.hud.locked_distance", String.format(Locale.US, "%.1f", lastDistance));
+        Player player = mc.player;
+        ClientLevel level = (ClientLevel) mc.level;
+        if (player == null || level == null || mc.screen != null) return;
 
+        float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
+        GuiGraphics g = event.getGuiGraphics();
         int sw = mc.getWindow().getGuiScaledWidth();
         int sh = mc.getWindow().getGuiScaledHeight();
-        int tw = mc.font.width(text);
-        int x = (sw - tw) / 2;
-        int y = sh / 2 - 36;
-        g.drawString(mc.font, text, x, y, 0xFF66FF66, true);
+
+        // 屏幕边缘箭头：指向所有屏幕外/背后的物理结构，保证“不漏标”
+        drawEdgeArrows(mc, level, partialTick, sw, sh, g);
+
+        // 距离文字提示：锁定到物理结构时，在准星上方显示最近一个的距离
+        if (foundPhysics) {
+            String text = fi.dy.masa.malilib.util.StringUtils.translate(
+                    "phantomstaff.hud.locked_distance", String.format(Locale.US, "%.1f", lastDistance));
+            int tw = mc.font.width(text);
+            int x = (sw - tw) / 2;
+            int y = sh / 2 - 36;
+            g.drawString(mc.font, text, x, y, 0xFF66FF66, true);
+        }
+    }
+
+    /**
+     * 遍历所有已加载物理结构，对“屏幕外”或“在相机背后”的实体在屏幕边缘画一个指向箭头。
+     * 屏幕内（视锥内且未被边缘裁剪）的实体已有 3D 红线指向，无需箭头。
+     */
+    private static void drawEdgeArrows(Minecraft mc, ClientLevel level, float partialTick,
+                                       int sw, int sh, GuiGraphics g) {
+        Camera camera = mc.gameRenderer().getMainCamera();
+        Vec3 camPos = camera.getPosition();
+        Vec3 left = camera.getLeftVector();   // 指向屏幕左（正）
+        Vec3 up = camera.getUpVector();       // 指向上（正）
+        Vec3 forward = camera.getLookVector();// 指向前方（正）
+
+        // 垂直 FOV（来自设置），水平 FOV 由宽高比推出，用于判断实体是否在屏幕内
+        float fov = (float) mc.options.fov().get();
+        double tanHalfY = Math.tan(Math.toRadians(fov / 2.0));
+        double tanHalfX = tanHalfY * ((double) sw / (double) sh);
+
+        fi.dy.masa.malilib.util.Color4f c = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_COLOR.getColor();
+        int r = toByte(c.r), gg = toByte(c.g), b = toByte(c.b);
+        int a = Math.max(200, toByte(c.a));
+
+        for (Entity e : level.entitiesForRendering()) {
+            if (!isPhysicsEntity(e)) continue;
+            Vec3 pos = e.getPosition(partialTick);
+            Vec3 center = new Vec3(pos.x, pos.y + e.getBbHeight() / 2.0, pos.z);
+            Vec3 v = center.subtract(camPos);
+            double Xv = v.dot(left);
+            double Yv = v.dot(up);
+            double Zv = v.dot(forward);
+
+            // 绘制坐标系：x 右为正、y 下为正（与 GuiGraphics 一致）
+            double dirX, dirY;
+            boolean onScreen;
+            if (Zv <= 0.0) {
+                // 在相机背后：一定在屏幕外
+                onScreen = false;
+                double len = Math.hypot(-Xv, -Yv);
+                if (len < 1e-6) continue;
+                dirX = -Xv / len;
+                dirY = -Yv / len;
+            } else {
+                double ndcX = (-Xv / Zv) / tanHalfX;
+                double ndcY = (Yv / Zv) / tanHalfY;
+                onScreen = Math.abs(ndcX) <= 1.0 && Math.abs(ndcY) <= 1.0;
+                if (onScreen) continue; // 屏幕内已有 3D 红线
+                double len = Math.hypot(ndcX, ndcY);
+                dirX = ndcX / len;
+                dirY = -ndcY / len; // ndcY 上为正，绘制 y 下为正 → 取反
+            }
+
+            // 把方向映射到屏幕边缘（矩形内缩 margin），沿该方向停在边界上
+            double margin = 26.0;
+            double sx = (dirX != 0) ? (sw / 2.0 - margin) / Math.abs(dirX) : Double.MAX_VALUE;
+            double sy = (dirY != 0) ? (sh / 2.0 - margin) / Math.abs(dirY) : Double.MAX_VALUE;
+            double scale = Math.min(sx, sy);
+            double ex = sw / 2.0 + dirX * scale;
+            double ey = sh / 2.0 + dirY * scale;
+
+            // 先画深色底衬托，再画彩色箭头，保证在亮背景下也清晰
+            drawEdgeArrow(g, ex, ey, Math.atan2(dirY, dirX), 0, 0, 0, 220, 15.0f);
+            drawEdgeArrow(g, ex, ey, Math.atan2(dirY, dirX), r, gg, b, a, 12.0f);
+        }
+    }
+
+    /** 在 (cx, cy) 处画一个朝 ang 方向（绘制坐标系：x 右正、y 下正）的实心三角箭头 */
+    private static void drawEdgeArrow(GuiGraphics g, double cx, double cy, double ang,
+                                      int r, int gg, int b, int a, float size) {
+        double tip = size;
+        double back = size * 0.55;
+        double spread = Math.toRadians(145.0);
+        double tx = cx + Math.cos(ang) * tip;
+        double ty = cy + Math.sin(ang) * tip;
+        double bx1 = cx + Math.cos(ang + spread) * back;
+        double by1 = cy + Math.sin(ang + spread) * back;
+        double bx2 = cx + Math.cos(ang - spread) * back;
+        double by2 = cy + Math.sin(ang - spread) * back;
+
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        PoseStack pose = g.pose();
+        Tesselator t = Tesselator.getInstance();
+        BufferBuilder bb = t.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
+        bb.addVertex(pose.last().pose(), (float) tx, (float) ty, 0.0f).setColor(r, gg, b, a);
+        bb.addVertex(pose.last().pose(), (float) bx1, (float) by1, 0.0f).setColor(r, gg, b, a);
+        bb.addVertex(pose.last().pose(), (float) bx2, (float) by2, 0.0f).setColor(r, gg, b, a);
+        BufferUploader.drawWithShader(bb.end());
+        RenderSystem.disableBlend();
     }
 
     private static void drawLineTo(MultiBufferSource.BufferSource buffers, PoseStack pose,
