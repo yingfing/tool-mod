@@ -2,7 +2,36 @@ plugins {
     id 'net.neoforged.moddev' version '1.0.20'
 }
 
-version = mod_version
+// ===== 版本号软编码：从 git tag 自动推导，发版只需推送 v* tag，无需手改 gradle.properties =====
+// 1) 当前提交若正好指向某个 v* tag，直接用该 tag（去掉 v 前缀）作为版本号；
+// 2) 否则（分支/提交，未打 tag）用「最近 v* tag + 短 sha」作为开发版（如 1.13.0-dev.a1b2c3d4）。
+def gitVersion() {
+    try {
+        // 1) 当前提交正好指向某个 v* tag → 直接用它（去掉 v 前缀）作为发版版本号
+        def tagProc = "git tag --points-at HEAD".execute()
+        tagProc.waitFor()
+        def vtag = tagProc.text.readLines().find { it.startsWith("v") }
+        if (vtag) return vtag.substring(1)
+        // 2) 否则（分支/提交，未打 tag）→ 用「最近 tag + 距离 + 短 sha」作为开发版（如 1.13.0-dev.a1b2c3d4）
+        //    注意：不要用 --match v*，仓库根目录的 versions/ 会被 shell 当成通配符展开，导致匹配失败
+        def descProc = "git describe --tags --abbrev=8".execute()
+        descProc.waitFor()
+        def desc = descProc.text.trim()
+        if (desc) {
+            def m = desc =~ /v?(\d+\.\d+\.\d+)(?:-(\d+)-g([0-9a-f]+))?.*/
+            if (m.find()) {
+                def base = m.group(1)
+                def distance = m.group(2)
+                def sha = m.group(3)
+                if (distance && sha) return "${base}-dev.${sha}"
+                return base
+            }
+        }
+    } catch (Exception ignored) {}
+    return "0.0.0-dev"
+}
+
+version = gitVersion()
 group = mod_group
 
 base {
@@ -69,4 +98,14 @@ tasks.register("printBuildTarget") {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
+}
+
+// 把计算出的版本号（及 modId/group）注入 neoforge.mods.toml 的占位符
+processResources {
+    def props = [mod_version: version, mod_id: mod_id, mod_group: mod_group]
+    inputs.properties(props)
+    filteringCharset = 'UTF-8'
+    filesMatching('META-INF/neoforge.mods.toml') {
+        expand(props)
+    }
 }

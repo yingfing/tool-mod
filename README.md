@@ -75,7 +75,9 @@
 ## 构建
 
 GitHub Actions 自动构建：推送到 `1.21.1` 分支即触发，产物 jar 在 Actions 页面的 Artifacts 中下载。
-打 `v*` 开头的 Tag（如 `v1.0.0`）会额外自动创建 GitHub Release 并附上 jar。
+打 `v*` 开头的 Tag（如 `v1.13.0`）会额外自动创建 GitHub Release 并附上 jar。
+
+> **版本号软编码**：模组的版本号不再手填 `gradle.properties`，而是由构建脚本从 git tag 自动推导——当前提交指向某个 `v*` tag 时直接用该 tag 作版本；分支/提交（未打 tag）构建则形如 `1.13.0-dev.a1b2c3d4`。**发版只需 `git tag vX.Y.Z && git push origin vX.Y.Z`，无需改任何文件。**
 
 本地构建：
 
