@@ -109,6 +109,12 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
         ConfigManager.getInstance().registerConfigHandler(PhantomStaffMod.MOD_ID, this);
         InputEventHandler.getKeybindManager().registerKeybindProvider(this);
         this.load();
+        // 旧配置文件里 open_config_gui 可能为空（早期版本默认未绑定），
+        // 强制补一个默认键 G，保证即使旧配置也不会出现「打不开配置界面」的情况。
+        if (OPEN_CONFIG_GUI.getStringValue().isEmpty()) {
+            OPEN_CONFIG_GUI.setValueFromString("G");
+            this.save();
+        }
     }
 
     private Path getConfigFile() {

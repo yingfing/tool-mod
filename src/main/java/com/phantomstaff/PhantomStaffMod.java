@@ -3,9 +3,7 @@ package com.phantomstaff;
 import com.phantomstaff.render.TargetLineRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.IConfigScreenFactory;
 import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,9 +22,6 @@ public class PhantomStaffMod {
         PhantomStaffConfig.getInstance().init();
         // 注册世界渲染事件：追踪红线
         NeoForge.EVENT_BUS.register(TargetLineRenderer.class);
-        // 在 Forge 的「Mods」界面为本体注册配置入口，保证始终能打开配置（不依赖热键是否绑定）
-        ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
-                () -> (mc, parent) -> new PhantomStaffGuiConfig(parent));
         // 启动期兼容性自检与日志
         logCompatibility();
     }
