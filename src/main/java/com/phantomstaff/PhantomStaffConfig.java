@@ -16,7 +16,7 @@ import fi.dy.masa.malilib.hotkeys.IKeybind;
 import fi.dy.masa.malilib.hotkeys.IKeybindManager;
 import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
-import com.phantomstaff.adjust.AdjustmentModeHandler;
+import com.phantomstaff.slot.PhantomStaffSlotHandler;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.loading.FMLPaths;
 
@@ -57,6 +57,16 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
     public static final ConfigBoolean TARGET_LINE_HIGHLIGHT =
             new ConfigBoolean("target_line_highlight", true).apply("phantomstaff.config");
 
+    // ===== 幽灵法杖槽位（核心功能：按键把法杖盖入当前选中槽位，刷新前一直保留） =====
+
+    /** 总开关：是否启用「幽灵法杖槽位」 */
+    public static final ConfigBoolean ENABLE_PHANTOM_SLOT =
+            new ConfigBoolean("enable_phantom_slot", true).apply("phantomstaff.config");
+
+    /** 盖入 / 取消幽灵法杖槽位的快捷键（默认 B） */
+    public static final ConfigHotkey PHANTOM_SLOT_TOGGLE =
+            new ConfigHotkey("phantom_slot_toggle", "B").apply("phantomstaff.config");
+
     /** 打开配置菜单的快捷键（默认 G 键；也可在菜单里改成别的） */
     public static final ConfigHotkey OPEN_CONFIG_GUI =
             new ConfigHotkey("open_config_gui", "G").apply("phantomstaff.config");
@@ -64,28 +74,6 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
     /** 开关追踪红线的快捷键（默认未绑定） */
     public static final ConfigHotkey TOGGLE_TARGET_LINE =
             new ConfigHotkey("toggle_target_line", "").apply("phantomstaff.config");
-
-    // ===== 调整模式（克隆 Aeronautics 物理法杖的锁定 / 拖拽 / 旋转发包，需手持法杖） =====
-
-    /** 总开关：是否启用「调整模式」功能 */
-    public static final ConfigBoolean ENABLE_ADJUST_MODE =
-            new ConfigBoolean("enable_adjust_mode", true).apply("phantomstaff.config");
-
-    /** 进入 / 退出调整模式的快捷键（默认 B） */
-    public static final ConfigHotkey ADJUST_MODE =
-            new ConfigHotkey("adjust_mode", "B").apply("phantomstaff.config");
-
-    /** 锁定 / 解锁当前瞄准的物理结构（默认 L） */
-    public static final ConfigHotkey ADJUST_LOCK =
-            new ConfigHotkey("adjust_lock", "L").apply("phantomstaff.config");
-
-    /** 开始 / 停止拖拽当前瞄准的物理结构（默认 K） */
-    public static final ConfigHotkey ADJUST_DRAG =
-            new ConfigHotkey("adjust_drag", "K").apply("phantomstaff.config");
-
-    /** 拖拽中绕竖直轴旋转 15°（默认 TAB） */
-    public static final ConfigHotkey ADJUST_ROTATE =
-            new ConfigHotkey("adjust_rotate", "TAB").apply("phantomstaff.config");
 
     private static final List<IConfigBase> GENERIC_OPTIONS = new ArrayList<>();
     private static final List<ConfigHotkey> HOTKEYS = new ArrayList<>();
@@ -97,14 +85,11 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
         GENERIC_OPTIONS.add(TARGET_LINE_THROUGH_WALLS);
         GENERIC_OPTIONS.add(TARGET_LINE_EDGE_ARROWS);
         GENERIC_OPTIONS.add(TARGET_LINE_HIGHLIGHT);
-        GENERIC_OPTIONS.add(ENABLE_ADJUST_MODE);
+        GENERIC_OPTIONS.add(ENABLE_PHANTOM_SLOT);
 
         HOTKEYS.add(OPEN_CONFIG_GUI);
         HOTKEYS.add(TOGGLE_TARGET_LINE);
-        HOTKEYS.add(ADJUST_MODE);
-        HOTKEYS.add(ADJUST_LOCK);
-        HOTKEYS.add(ADJUST_DRAG);
-        HOTKEYS.add(ADJUST_ROTATE);
+        HOTKEYS.add(PHANTOM_SLOT_TOGGLE);
     }
 
     private static PhantomStaffConfig INSTANCE;
@@ -130,8 +115,9 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
             return true;
         });
 
-        // 调整模式相关热键回调统一注册（锁定/拖拽/旋转由 AdjustmentModeHandler 处理）
-        AdjustmentModeHandler.get().registerHotkeys();
+        // 幽灵法杖槽位热键：盖入 / 取消
+        PHANTOM_SLOT_TOGGLE.getKeybind().setCallback((KeyAction action, IKeybind key) ->
+                PhantomStaffSlotHandler.get().toggle());
     }
 
     /** 在模组初始化时调用：注册配置处理器 + 热键提供者 */

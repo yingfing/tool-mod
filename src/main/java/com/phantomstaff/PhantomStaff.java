@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 物理法杖物品引用（Create Aeronautics 的 simulated:creative_physics_staff）。
- * 仅用于在启动时检测 Aeronautics 是否已安装；本模组不再伪造/替换该物品。
+ * 用于：① 启动时检测 Aeronautics 是否已安装；② 幽灵法杖槽位把该物品「盖」入当前选中槽位。
  * 物品ID 已核实：Create Aeronautics 的 modid 为 simulated，完整 ID 为 simulated:creative_physics_staff。
  */
 public final class PhantomStaff {

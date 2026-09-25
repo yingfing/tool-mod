@@ -3,7 +3,7 @@
 
   "phantomstaff.config.category.general": "通用设置",
   "phantomstaff.config.category.target_line": "追踪红线",
-  "phantomstaff.config.category.adjust_mode": "调整模式",
+  "phantomstaff.config.category.phantom_slot": "幽灵法杖槽位",
   "phantomstaff.config.category.hotkeys": "快捷键",
 
   "phantomstaff.config.name.enable_phantom_slot": "启用虚拟第10格",
@@ -46,27 +46,13 @@
   "phantomstaff.config.prettyName.toggle_target_line": "开关追踪红线",
   "phantomstaff.config.comment.toggle_target_line": "开关物理结构追踪红线的快捷键。",
 
-  "phantomstaff.config.name.enable_adjust_mode": "启用调整模式",
-  "phantomstaff.config.prettyName.enable_adjust_mode": "启用调整模式",
-  "phantomstaff.config.comment.enable_adjust_mode": "克隆物理法杖的锁定/拖拽/旋转发包，用热键调整物理结构。需要主手手持物理法杖；服务端仅在手持法杖时才接受。",
+  "phantomstaff.config.name.enable_phantom_slot": "启用幽灵法杖槽位",
+  "phantomstaff.config.prettyName.enable_phantom_slot": "启用幽灵法杖槽位",
+  "phantomstaff.config.comment.enable_phantom_slot": "按键把物理法杖「盖」进当前选中的快捷栏槽位（纯客户端）。盖入后一直保留，直到服务端刷新该槽位才消失。依赖老版 Aeronautics 服务端信任客户端的老 bug。",
 
-  "phantomstaff.config.name.adjust_mode": "进入/退出调整模式",
-  "phantomstaff.config.prettyName.adjust_mode": "进入/退出调整模式",
-  "phantomstaff.config.comment.adjust_mode": "切换调整模式的快捷键（默认 B）。",
+  "phantomstaff.config.name.phantom_slot_toggle": "盖入/取消幽灵法杖槽位",
+  "phantomstaff.config.prettyName.phantom_slot_toggle": "盖入/取消幽灵法杖槽位",
+  "phantomstaff.config.comment.phantom_slot_toggle": "把法杖盖入当前选中槽位 / 再次按下取消（默认 B）。",
 
-  "phantomstaff.config.name.adjust_lock": "锁定/解锁结构",
-  "phantomstaff.config.prettyName.adjust_lock": "锁定/解锁结构",
-  "phantomstaff.config.comment.adjust_lock": "锁定或解锁当前瞄准的物理结构（默认 L）。",
-
-  "phantomstaff.config.name.adjust_drag": "开始/停止拖拽",
-  "phantomstaff.config.prettyName.adjust_drag": "开始/停止拖拽",
-  "phantomstaff.config.comment.adjust_drag": "开始或停止拖拽当前瞄准的物理结构（默认 K）。",
-
-  "phantomstaff.config.name.adjust_rotate": "旋转被拖拽结构",
-  "phantomstaff.config.prettyName.adjust_rotate": "旋转被拖拽结构",
-  "phantomstaff.config.comment.adjust_rotate": "把拖拽中的结构绕竖直轴旋转 15°（默认 TAB）。",
-
-  "phantomstaff.hud.locked_distance": "已锁定物理结构   距离 %s m",
-
-  "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] 服务器运行 Create Aeronautics（网络版本 %s）。虚拟第10格仅在旧版服务端可用，新版服务端可能把你踢下线。"
+  "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] 服务器运行 Create Aeronautics。幽灵法杖槽位依赖「老版服务端信任客户端」的特性，新版服务端可能会拒绝法杖操作。"
 }

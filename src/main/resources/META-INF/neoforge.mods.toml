@@ -6,7 +6,7 @@ license="MIT"
 modId="phantomstaff"
 version="${mod_version}"
 displayName="Phantom Staff"
-description="面向 Create Aeronautics 物理结构的纯客户端辅助工具：高亮、追踪红线、屏幕边缘指向箭头，以及把左/右键与 Tab 重映射为物理结构调整控制。"
+description="面向 Create Aeronautics 物理结构的纯客户端辅助工具：高亮、追踪红线、屏幕边缘指向箭头，以及幽灵法杖槽位——按键把物理法杖盖入当前选中的快捷栏槽位并保留到物品栏刷新。"
 
 [[dependencies.phantomstaff]]
 modId="neoforge"
