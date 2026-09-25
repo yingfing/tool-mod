@@ -48,11 +48,11 @@ public class TargetLineRenderer {
 
     // ===== 自定义线渲染类型：关闭深度测试 -> 穿透地形可见 =====
 
-    private static RenderType makeLineType(String name, double width, boolean depthTest,
+    private static RenderType makeLineType(String name, double width,
                                            RenderStateShard.TransparencyStateShard transparency) {
         RenderType.CompositeState state = RenderType.CompositeState.builder()
                 .setLineState(new RenderStateShard.LineStateShard(OptionalDouble.of(width)))
-                .setDepthTestState(depthTest ? RenderStateShard.DEPTH_TEST : RenderStateShard.NO_DEPTH_TEST)
+                .setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
                 .setCullState(RenderStateShard.NO_CULL)
                 .setTransparencyState(transparency)
                 .createCompositeState(false);
@@ -62,13 +62,13 @@ public class TargetLineRenderer {
 
     /** 黑色外描边（最宽，置于最底层） */
     private static final RenderType LINE_OUTLINE =
-            makeLineType("ps_target_outline", 6.0, false, RenderStateShard.NO_TRANSPARENCY);
+            makeLineType("ps_target_outline", 6.0, RenderStateShard.NO_TRANSPARENCY);
     /** 红色叠加发光层（中等宽度，加色混合产生发光感） */
     private static final RenderType LINE_GLOW =
-            makeLineType("ps_target_glow", 4.0, false, RenderStateShard.ADDITIVE_TRANSPARENCY);
+            makeLineType("ps_target_glow", 4.0, RenderStateShard.ADDITIVE_TRANSPARENCY);
     /** 亮红核心线（最细、最亮） */
     private static final RenderType LINE_CORE =
-            makeLineType("ps_target_core", 2.0, false, RenderStateShard.NO_TRANSPARENCY);
+            makeLineType("ps_target_core", 2.0, RenderStateShard.NO_TRANSPARENCY);
 
     @SubscribeEvent
     public static void onRenderLevel(RenderLevelStageEvent event) {
