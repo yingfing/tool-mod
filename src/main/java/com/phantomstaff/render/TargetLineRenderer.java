@@ -15,8 +15,8 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.client.DeltaTracker;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.neoforge.client.event.DeltaTracker;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 /**
@@ -40,7 +40,8 @@ public class TargetLineRenderer {
         Level level = mc.level;
         if (player == null || level == null || mc.screen != null) return;
 
-        var partialTick = event.getPartialTick();
+        // getPartialTick() 返回 vanilla DeltaTracker，渲染用的部分刻度需取 float
+        float partialTick = event.getPartialTick().getGameTimeDeltaPartialTick(false);
         Vec3 eye = player.getEyePosition(partialTick);
 
         Vec3 target = findTarget(mc, player, eye, partialTick);
@@ -73,7 +74,7 @@ public class TargetLineRenderer {
     }
 
     /** 优先找视线方向上的物理实体，其次找方块 */
-    private static Vec3 findTarget(Minecraft mc, Player player, Vec3 eye, DeltaTracker partialTick) {
+    private static Vec3 findTarget(Minecraft mc, Player player, Vec3 eye, float partialTick) {
         Vec3 look = player.getViewVector(partialTick);
         Vec3 end = eye.add(look.scale(MAX_DIST));
 

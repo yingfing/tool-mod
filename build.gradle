@@ -14,6 +14,20 @@ java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 neoForge {
     version = neo_version
     // ModDevGradle 默认使用 Mojang 官方映射
+
+    // dev 运行配置（client/server/data），让 Minecraft 与依赖 mod 正确进入编译/运行 classpath
+    runs {
+        client { client() }
+        server { server() }
+        data { data() }
+    }
+
+    // 声明本 mod 的 sourceSet，确保 modding 依赖（Minecraft 映射、MaFgLib 等）注入编译 classpath
+    mods {
+        phantomstaff {
+            sourceSet sourceSets.main
+        }
+    }
 }
 
 repositories {
@@ -28,11 +42,9 @@ repositories {
 }
 
 dependencies {
-    // 编译期 + 开发环境运行期可用；正式游戏内需单独安装 MaFgLib
+    // MaFgLib 是 MaLiLib 的 NeoForge 移植版，包名沿用 fi.dy.masa.malilib，
+    // 因此配置/热键系统直接 import fi.dy.masa.malilib.* 即可，无需再引 malilib。
     implementation "maven.modrinth:mafglib:0.4.3+mc1.21.1"
-    // MaFgLib 在 Modrinth 上未把 MaLiLib 作为传递依赖发布，
-    // 而本模组的配置/热键系统（fi.dy.masa.malilib.*）直接用到它，必须显式声明。
-    implementation "maven.modrinth:malilib:0.21.10"
 }
 
 tasks.withType(JavaCompile).configureEach {
