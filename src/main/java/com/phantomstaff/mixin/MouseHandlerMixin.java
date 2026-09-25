@@ -3,7 +3,7 @@ package com.phantomstaff.mixin;
 import com.phantomstaff.PhantomStaffConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
-import net.minecraft.world.entity.player.PlayerInventory;
+import net.minecraft.world.entity.player.Inventory;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,7 +24,7 @@ public class MouseHandlerMixin {
         if (!PhantomStaffConfig.ENABLE_PHANTOM_SLOT.getBooleanValue()) return;
         if (!PhantomStaffConfig.ALLOW_SCROLL_TO_SLOT_10.getBooleanValue()) return;
 
-        PlayerInventory inv = mc.player.getInventory();
+        Inventory inv = mc.player.getInventory();
 
         if (yOffset > 0) {
             inv.selected = (inv.selected + 1) % 10;

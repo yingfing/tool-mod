@@ -8,12 +8,13 @@ import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
-import fi.dy.masa.malilib.event.IKeybindManager;
-import fi.dy.masa.malilib.event.IKeybindProvider;
 import fi.dy.masa.malilib.event.InputEventHandler;
-import com.phantomstaff.render.TargetLineRenderer;
+import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
 import fi.dy.masa.malilib.hotkeys.IKeybind;
+import fi.dy.masa.malilib.hotkeys.IKeybindManager;
+import fi.dy.masa.malilib.hotkeys.IKeybindProvider;
 import fi.dy.masa.malilib.hotkeys.KeyAction;
+import com.phantomstaff.render.TargetLineRenderer;
 import net.minecraft.client.Minecraft;
 import net.neoforged.fml.loading.FMLPaths;
 
@@ -76,15 +77,15 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
     }
 
     private PhantomStaffConfig() {
-        // 打开配置菜单的热键回调
-        OPEN_CONFIG_GUI.setCallback((KeyAction action, IKeybind key) -> {
+        // 打开配置菜单的热键回调（MaFgLib 0.4.x：回调挂在 IKeybind 上）
+        OPEN_CONFIG_GUI.getKeybind().setCallback((KeyAction action, IKeybind key) -> {
             Minecraft mc = Minecraft.getInstance();
             mc.execute(() -> mc.setScreen(new PhantomStaffGuiConfig(mc.screen)));
             return true;
         });
 
         // 开关追踪红线
-        TOGGLE_TARGET_LINE.setCallback((KeyAction action, IKeybind key) -> {
+        TOGGLE_TARGET_LINE.getKeybind().setCallback((KeyAction action, IKeybind key) -> {
             TargetLineRenderer.enabled = !TargetLineRenderer.enabled;
             return true;
         });
