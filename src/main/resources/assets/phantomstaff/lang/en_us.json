@@ -3,6 +3,7 @@
 
   "phantomstaff.config.category.general": "General",
   "phantomstaff.config.category.target_line": "Target Line",
+  "phantomstaff.config.category.adjust_mode": "Adjustment Mode",
   "phantomstaff.config.category.hotkeys": "Hotkeys",
 
   "phantomstaff.config.name.enable_phantom_slot": "Enable Phantom Slot",
@@ -44,6 +45,26 @@
   "phantomstaff.config.name.toggle_target_line": "Toggle Target Line",
   "phantomstaff.config.prettyName.toggle_target_line": "Toggle Target Line",
   "phantomstaff.config.comment.toggle_target_line": "Hotkey to toggle the physics structure tracking line.",
+
+  "phantomstaff.config.name.enable_adjust_mode": "Enable Adjustment Mode",
+  "phantomstaff.config.prettyName.enable_adjust_mode": "Enable Adjustment Mode",
+  "phantomstaff.config.comment.enable_adjust_mode": "Clone the physics staff's lock/drag/rotate packets so you can adjust physics structures with hotkeys. Requires holding the physics staff; the server only accepts it while you hold it.",
+
+  "phantomstaff.config.name.adjust_mode": "Toggle Adjustment Mode",
+  "phantomstaff.config.prettyName.adjust_mode": "Toggle Adjustment Mode",
+  "phantomstaff.config.comment.adjust_mode": "Hotkey to enter/exit adjustment mode (default B).",
+
+  "phantomstaff.config.name.adjust_lock": "Lock / Unlock Structure",
+  "phantomstaff.config.prettyName.adjust_lock": "Lock / Unlock Structure",
+  "phantomstaff.config.comment.adjust_lock": "Lock or unlock the aimed physics structure (default L).",
+
+  "phantomstaff.config.name.adjust_drag": "Start / Stop Dragging",
+  "phantomstaff.config.prettyName.adjust_drag": "Start / Stop Dragging",
+  "phantomstaff.config.comment.adjust_drag": "Start or stop dragging the aimed physics structure (default K).",
+
+  "phantomstaff.config.name.adjust_rotate": "Rotate Dragged Structure",
+  "phantomstaff.config.prettyName.adjust_rotate": "Rotate Dragged Structure",
+  "phantomstaff.config.comment.adjust_rotate": "Rotate the dragged structure 15 deg around the vertical axis (default TAB).",
 
   "phantomstaff.hud.locked_distance": "Physics structure locked   Distance %s m",
 

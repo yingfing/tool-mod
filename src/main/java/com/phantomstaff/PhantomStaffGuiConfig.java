@@ -30,6 +30,13 @@ public class PhantomStaffGuiConfig extends GuiConfigsBase {
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_EDGE_ARROWS));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_HIGHLIGHT));
 
+        list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.adjust_mode")));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ENABLE_ADJUST_MODE));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ADJUST_MODE));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ADJUST_LOCK));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ADJUST_DRAG));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ADJUST_ROTATE));
+
         list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.hotkeys")));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.OPEN_CONFIG_GUI));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TOGGLE_TARGET_LINE));

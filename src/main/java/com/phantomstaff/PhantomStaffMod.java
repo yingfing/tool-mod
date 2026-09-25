@@ -1,5 +1,7 @@
 package com.phantomstaff;
 
+import com.phantomstaff.aeronautics.AeronauticsBridge;
+import com.phantomstaff.adjust.AdjustmentModeHandler;
 import com.phantomstaff.render.TargetLineRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -22,6 +24,8 @@ public class PhantomStaffMod {
         PhantomStaffConfig.getInstance().init();
         // 注册世界渲染事件：追踪红线
         NeoForge.EVENT_BUS.register(TargetLineRenderer.class);
+        // 注册调整模式处理器（克隆物理法杖的锁定/拖拽/旋转发包，需手持法杖）
+        NeoForge.EVENT_BUS.register(AdjustmentModeHandler.get());
         // 启动期兼容性自检与日志
         logCompatibility();
     }
@@ -33,6 +37,8 @@ public class PhantomStaffMod {
      */
     private void logCompatibility() {
         LOG.info("[PhantomStaff] Phantom Staff 已加载（纯客户端 NeoForge 模组）");
+        // 提前初始化 Aeronautics 反射桥，便于在启动日志中看到调整模式是否可用
+        AeronauticsBridge.get();
         if (PhantomStaff.PHANTOM_STAFF.isEmpty()) {
             LOG.warn("[PhantomStaff] 未检测到 Create Aeronautics 的物理法杖物品 simulated:creative_physics_staff，"
                     + "针对物理结构的高亮/红线/边缘箭头不会生效。请确认已安装 Create Aeronautics。");
