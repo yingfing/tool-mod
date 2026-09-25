@@ -17,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.client.DeltaTracker;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -136,6 +137,7 @@ public class TargetLineRenderer {
         // 遍历本维度内所有已加载实体（即服务器数据包已下发的）：
         // 凡是物理结构（类名含 physics/contraption）一律画一条线指向它，
         // 不要求它在视锥内、被渲染、或被瞄准。
+        boolean highlight = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_HIGHLIGHT.getBooleanValue();
         double maxDist = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_MAX_DIST.getDoubleValue();
         double nearest = Double.MAX_VALUE;
         boolean anyPhysics = false;
@@ -147,6 +149,10 @@ public class TargetLineRenderer {
             if (d < nearest) nearest = d;
             anyPhysics = true;
             drawLineTo(buffers, pose, eye, center, cr, cg, cb, ca);
+            // 高亮：在实体包围盒上画发光轮廓框（轻微外扩避免与模型 z-fighting）
+            if (highlight) {
+                drawBoxOutline(buffers, pose, e.getBoundingBox().inflate(0.1), lineCore, cr, cg, cb, ca);
+            }
         }
 
         if (anyPhysics) {
@@ -187,8 +193,10 @@ public class TargetLineRenderer {
         int sw = mc.getWindow().getGuiScaledWidth();
         int sh = mc.getWindow().getGuiScaledHeight();
 
-        // 屏幕边缘箭头：指向所有屏幕外/背后的物理结构，保证“不漏标”
-        drawEdgeArrows(mc, level, partialTick, sw, sh, g);
+        // 屏幕边缘箭头：指向所有屏幕外/背后的物理结构，保证“不漏标”（可由配置开关关闭）
+        if (com.phantomstaff.PhantomStaffConfig.TARGET_LINE_EDGE_ARROWS.getBooleanValue()) {
+            drawEdgeArrows(mc, level, partialTick, sw, sh, g);
+        }
 
         // 距离文字提示：锁定到物理结构时，在准星上方显示最近一个的距离
         if (foundPhysics) {
@@ -302,6 +310,39 @@ public class TargetLineRenderer {
         vc.addVertex(pose.last().pose(), (float) to.x, (float) to.y, (float) to.z)
                 .setColor(r, g, b, a)
                 .setNormal(pose.last(), (float) dir.x, (float) dir.y, (float) dir.z);
+    }
+
+    /** 画一段线（自动计算方向法线），供轮廓框复用 */
+    private static void drawSeg(MultiBufferSource.BufferSource buffers, PoseStack pose,
+                                Vec3 from, Vec3 to, RenderType type, int r, int g, int b, int a) {
+        Vec3 dir = to.subtract(from).normalize();
+        drawLine(buffers, pose, from, to, type, r, g, b, a, dir);
+    }
+
+    /** 在实体包围盒上画 12 条棱的发光轮廓框 */
+    private static void drawBoxOutline(MultiBufferSource.BufferSource buffers, PoseStack pose,
+                                       AABB box, RenderType type, int r, int g, int b, int a) {
+        double x0 = box.minX, y0 = box.minY, z0 = box.minZ;
+        double x1 = box.maxX, y1 = box.maxY, z1 = box.maxZ;
+        Vec3 p000 = new Vec3(x0, y0, z0), p100 = new Vec3(x1, y0, z0);
+        Vec3 p010 = new Vec3(x0, y1, z0), p110 = new Vec3(x1, y1, z0);
+        Vec3 p001 = new Vec3(x0, y0, z1), p101 = new Vec3(x1, y0, z1);
+        Vec3 p011 = new Vec3(x0, y1, z1), p111 = new Vec3(x1, y1, z1);
+        // 底面
+        drawSeg(buffers, pose, p000, p100, type, r, g, b, a);
+        drawSeg(buffers, pose, p100, p110, type, r, g, b, a);
+        drawSeg(buffers, pose, p110, p010, type, r, g, b, a);
+        drawSeg(buffers, pose, p010, p000, type, r, g, b, a);
+        // 顶面
+        drawSeg(buffers, pose, p001, p101, type, r, g, b, a);
+        drawSeg(buffers, pose, p101, p111, type, r, g, b, a);
+        drawSeg(buffers, pose, p111, p011, type, r, g, b, a);
+        drawSeg(buffers, pose, p011, p001, type, r, g, b, a);
+        // 立柱
+        drawSeg(buffers, pose, p000, p001, type, r, g, b, a);
+        drawSeg(buffers, pose, p100, p101, type, r, g, b, a);
+        drawSeg(buffers, pose, p010, p011, type, r, g, b, a);
+        drawSeg(buffers, pose, p110, p111, type, r, g, b, a);
     }
 
     /** 字符串匹配 Aeronautics 物理实体类名，避免编译期硬依赖 */

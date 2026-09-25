@@ -33,6 +33,8 @@ public class PhantomStaffGuiConfig extends GuiConfigsBase {
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_WIDTH));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_MAX_DIST));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_THROUGH_WALLS));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_EDGE_ARROWS));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_HIGHLIGHT));
 
         list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.hotkeys")));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.OPEN_CONFIG_GUI));

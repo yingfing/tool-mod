@@ -66,6 +66,14 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
     public static final ConfigBoolean TARGET_LINE_THROUGH_WALLS =
             new ConfigBoolean("target_line_through_walls", true).apply("phantomstaff.config");
 
+    /** 屏幕边缘指向箭头：屏幕外/背后的物理结构在屏幕边缘画指向箭头。关闭后只保留 3D 红线 */
+    public static final ConfigBoolean TARGET_LINE_EDGE_ARROWS =
+            new ConfigBoolean("target_line_edge_arrows", true).apply("phantomstaff.config");
+
+    /** 高亮物理结构：在其包围盒上画发光轮廓框，便于远距离/小目标定位 */
+    public static final ConfigBoolean TARGET_LINE_HIGHLIGHT =
+            new ConfigBoolean("target_line_highlight", true).apply("phantomstaff.config");
+
     /** 打开配置菜单的快捷键（默认未绑定，可在菜单里自己设） */
     public static final ConfigHotkey OPEN_CONFIG_GUI =
             new ConfigHotkey("open_config_gui", "").apply("phantomstaff.config");
@@ -86,6 +94,8 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
         GENERIC_OPTIONS.add(TARGET_LINE_WIDTH);
         GENERIC_OPTIONS.add(TARGET_LINE_MAX_DIST);
         GENERIC_OPTIONS.add(TARGET_LINE_THROUGH_WALLS);
+        GENERIC_OPTIONS.add(TARGET_LINE_EDGE_ARROWS);
+        GENERIC_OPTIONS.add(TARGET_LINE_HIGHLIGHT);
         HOTKEYS.add(OPEN_CONFIG_GUI);
         HOTKEYS.add(TOGGLE_TARGET_LINE);
     }
