@@ -33,9 +33,9 @@ import java.util.List;
  */
 public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvider {
 
-    /** 追踪红线总开关（在配置界面里可视化开关；也可另绑 toggle_target_line 热键快速切换） */
+    /** 追踪红线总开关（默认关闭，装了模组不会突然冒出红线；需要时在配置界面里可视化打开） */
     public static final ConfigBoolean TARGET_LINE_ENABLE =
-            new ConfigBoolean("target_line_enable", true).apply("phantomstaff.config");
+            new ConfigBoolean("target_line_enable", false).apply("phantomstaff.config");
 
     /** 红线核心颜色（ARGB） */
     public static final ConfigColor TARGET_LINE_COLOR =
