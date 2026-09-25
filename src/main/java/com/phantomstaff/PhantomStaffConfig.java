@@ -4,6 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.GsonBuilder;
 import fi.dy.masa.malilib.config.ConfigManager;
+import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
@@ -62,7 +63,7 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
             new ConfigDouble("target_line_max_distance", 256.0,
                     "红线最大追踪距离（方块）。调大可在更远处分辨并锁定你的物理载具");
 
-    private static final List<ConfigBoolean> GENERIC_OPTIONS = new ArrayList<>();
+    private static final List<IConfigBase> GENERIC_OPTIONS = new ArrayList<>();
     private static final List<ConfigHotkey> HOTKEYS = new ArrayList<>();
 
     static {
