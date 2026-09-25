@@ -8,13 +8,10 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.BufferUploader;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderSystem;
 import net.minecraft.client.renderer.RenderType;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.math.Vector3f;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
@@ -212,9 +209,10 @@ public class TargetLineRenderer {
                                        int sw, int sh, GuiGraphics g) {
         Camera camera = mc.gameRenderer().getMainCamera();
         Vec3 camPos = camera.getPosition();
-        Vec3 left = camera.getLeftVector();   // 指向屏幕左（正）
-        Vec3 up = camera.getUpVector();       // 指向上（正）
-        Vec3 forward = camera.getLookVector();// 指向前方（正）
+        // 相机基向量（返回 Vector3f）：left 指向屏幕左、up 指向上、forward 指向前方
+        Vector3f left = camera.getLeftVector();
+        Vector3f up = camera.getUpVector();
+        Vector3f forward = camera.getLookVector();
 
         // 垂直 FOV（来自设置），水平 FOV 由宽高比推出，用于判断实体是否在屏幕内
         float fov = (float) mc.options.fov().get();
@@ -224,15 +222,17 @@ public class TargetLineRenderer {
         fi.dy.masa.malilib.util.Color4f c = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_COLOR.getColor();
         int r = toByte(c.r), gg = toByte(c.g), b = toByte(c.b);
         int a = Math.max(200, toByte(c.a));
+        int color = (a << 24) | (r << 16) | (gg << 8) | b;
 
         for (Entity e : level.entitiesForRendering()) {
             if (!isPhysicsEntity(e)) continue;
             Vec3 pos = e.getPosition(partialTick);
             Vec3 center = new Vec3(pos.x, pos.y + e.getBbHeight() / 2.0, pos.z);
             Vec3 v = center.subtract(camPos);
-            double Xv = v.dot(left);
-            double Yv = v.dot(up);
-            double Zv = v.dot(forward);
+            // 手动点积（left/up/forward 是 Vector3f，v 是 Vec3）
+            double Xv = v.x * left.x + v.y * left.y + v.z * left.z;
+            double Yv = v.x * up.x + v.y * up.y + v.z * up.z;
+            double Zv = v.x * forward.x + v.y * forward.y + v.z * forward.z;
 
             // 绘制坐标系：x 右为正、y 下为正（与 GuiGraphics 一致）
             double dirX, dirY;
@@ -262,36 +262,26 @@ public class TargetLineRenderer {
             double ex = sw / 2.0 + dirX * scale;
             double ey = sh / 2.0 + dirY * scale;
 
-            // 先画深色底衬托，再画彩色箭头，保证在亮背景下也清晰
-            drawEdgeArrow(g, ex, ey, Math.atan2(dirY, dirX), 0, 0, 0, 220, 15.0f);
-            drawEdgeArrow(g, ex, ey, Math.atan2(dirY, dirX), r, gg, b, a, 12.0f);
+            drawEdgeArrow(g, mc, ex, ey, Math.atan2(dirY, dirX), color);
         }
     }
 
-    /** 在 (cx, cy) 处画一个朝 ang 方向（绘制坐标系：x 右正、y 下正）的实心三角箭头 */
-    private static void drawEdgeArrow(GuiGraphics g, double cx, double cy, double ang,
-                                      int r, int gg, int b, int a, float size) {
-        double tip = size;
-        double back = size * 0.55;
-        double spread = Math.toRadians(145.0);
-        double tx = cx + Math.cos(ang) * tip;
-        double ty = cy + Math.sin(ang) * tip;
-        double bx1 = cx + Math.cos(ang + spread) * back;
-        double by1 = cy + Math.sin(ang + spread) * back;
-        double bx2 = cx + Math.cos(ang - spread) * back;
-        double by2 = cy + Math.sin(ang - spread) * back;
+    /** 8 向箭头字形（屏幕绘制坐标系：x 右正、y 下正，角度顺时针） */
+    private static final String[] EDGE_ARROWS = {"→", "↘", "↓", "↙", "←", "↖", "↑", "↗"};
 
-        RenderSystem.disableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        PoseStack pose = g.pose();
-        Tesselator t = Tesselator.getInstance();
-        BufferBuilder bb = t.begin(VertexFormat.Mode.TRIANGLES, DefaultVertexFormat.POSITION_COLOR);
-        bb.addVertex(pose.last().pose(), (float) tx, (float) ty, 0.0f).setColor(r, gg, b, a);
-        bb.addVertex(pose.last().pose(), (float) bx1, (float) by1, 0.0f).setColor(r, gg, b, a);
-        bb.addVertex(pose.last().pose(), (float) bx2, (float) by2, 0.0f).setColor(r, gg, b, a);
-        BufferUploader.drawWithShader(bb.end());
-        RenderSystem.disableBlend();
+    /** 在 (cx, cy) 处画一个指向 ang 方向（x 右正、y 下正）的方向箭头字形 */
+    private static void drawEdgeArrow(GuiGraphics g, Minecraft mc, double cx, double cy,
+                                      double ang, int color) {
+        int idx = (int) Math.round(Math.toDegrees(ang) / 45.0);
+        idx = ((idx % 8) + 8) % 8;
+        String glyph = EDGE_ARROWS[idx];
+        int tw = mc.font.width(glyph);
+        int th = mc.font.lineHeight;
+        int dx = (int) Math.round(cx) - tw / 2;
+        int dy = (int) Math.round(cy) - th / 2;
+        // 先画深色描边衬托，再画彩色箭头，保证在亮背景下也清晰
+        g.drawString(mc.font, glyph, dx + 1, dy + 1, 0xFF000000, false);
+        g.drawString(mc.font, glyph, dx, dy, color, false);
     }
 
     private static void drawLineTo(MultiBufferSource.BufferSource buffers, PoseStack pose,
