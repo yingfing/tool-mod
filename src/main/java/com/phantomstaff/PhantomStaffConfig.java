@@ -4,9 +4,11 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.GsonBuilder;
 import fi.dy.masa.malilib.config.ConfigManager;
+import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.event.InputEventHandler;
 import fi.dy.masa.malilib.hotkeys.IHotkeyCallback;
@@ -56,13 +58,19 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
             new ConfigHotkey("toggle_target_line", "",
                     "开关追踪物理结构的红线");
 
-    private static final List<ConfigBoolean> GENERIC_OPTIONS = new ArrayList<>();
+    /** 红线最大追踪距离（方块）。调大可在更远处分辨并锁定你的物理载具 */
+    public static final ConfigDouble TARGET_LINE_MAX_DIST =
+            new ConfigDouble("target_line_max_distance", 256.0,
+                    "红线最大追踪距离（方块）。调大可在更远处分辨并锁定你的物理载具");
+
+    private static final List<IConfigBase> GENERIC_OPTIONS = new ArrayList<>();
     private static final List<ConfigHotkey> HOTKEYS = new ArrayList<>();
 
     static {
         GENERIC_OPTIONS.add(ENABLE_PHANTOM_SLOT);
         GENERIC_OPTIONS.add(ALLOW_SCROLL_TO_SLOT_10);
         GENERIC_OPTIONS.add(RENDER_VIRTUAL_SLOT);
+        GENERIC_OPTIONS.add(TARGET_LINE_MAX_DIST);
         HOTKEYS.add(OPEN_CONFIG_GUI);
         HOTKEYS.add(TOGGLE_TARGET_LINE);
     }
