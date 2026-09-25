@@ -33,6 +33,10 @@ import java.util.List;
  */
 public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvider {
 
+    /** 追踪红线总开关（在配置界面里可视化开关；也可另绑 toggle_target_line 热键快速切换） */
+    public static final ConfigBoolean TARGET_LINE_ENABLE =
+            new ConfigBoolean("target_line_enable", true).apply("phantomstaff.config");
+
     /** 红线核心颜色（ARGB） */
     public static final ConfigColor TARGET_LINE_COLOR =
             new ConfigColor("target_line_color", "#FFFF1414").apply("phantomstaff.config");
@@ -79,6 +83,7 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
     private static final List<ConfigHotkey> HOTKEYS = new ArrayList<>();
 
     static {
+        GENERIC_OPTIONS.add(TARGET_LINE_ENABLE);
         GENERIC_OPTIONS.add(TARGET_LINE_COLOR);
         GENERIC_OPTIONS.add(TARGET_LINE_WIDTH);
         GENERIC_OPTIONS.add(TARGET_LINE_MAX_DIST);
@@ -109,9 +114,12 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
             return true;
         });
 
-        // 开关追踪红线
+        // 开关追踪红线：热键只是可选的快捷方式，总开关以配置项为准（界面里可视化更改）
         TOGGLE_TARGET_LINE.getKeybind().setCallback((KeyAction action, IKeybind key) -> {
-            com.phantomstaff.render.TargetLineRenderer.enabled = !com.phantomstaff.render.TargetLineRenderer.enabled;
+            boolean next = !TARGET_LINE_ENABLE.getBooleanValue();
+            TARGET_LINE_ENABLE.setBooleanValue(next);
+            com.phantomstaff.render.TargetLineRenderer.enabled = next;
+            getInstance().save();
             return true;
         });
 
@@ -125,6 +133,8 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
         ConfigManager.getInstance().registerConfigHandler(PhantomStaffMod.MOD_ID, this);
         InputEventHandler.getKeybindManager().registerKeybindProvider(this);
         this.load();
+        // 同步红线总开关到渲染器：让配置界面里改的值立即生效
+        com.phantomstaff.render.TargetLineRenderer.enabled = TARGET_LINE_ENABLE.getBooleanValue();
         // 旧配置文件里 open_config_gui 可能为空（早期版本默认未绑定），
         // 强制补一个默认键 G，保证即使旧配置也不会出现「打不开配置界面」的情况。
         if (OPEN_CONFIG_GUI.getStringValue().isEmpty()) {

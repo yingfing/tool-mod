@@ -23,6 +23,7 @@ public class PhantomStaffGuiConfig extends GuiConfigsBase {
         List<ConfigOptionWrapper> list = new ArrayList<>();
 
         list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.target_line")));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_ENABLE));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_COLOR));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_WIDTH));
         list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_MAX_DIST));

@@ -46,6 +46,10 @@
   "phantomstaff.config.prettyName.toggle_target_line": "Toggle Target Line",
   "phantomstaff.config.comment.toggle_target_line": "Hotkey to toggle the physics structure tracking line.",
 
+  "phantomstaff.config.name.target_line_enable": "Enable Target Line",
+  "phantomstaff.config.prettyName.target_line_enable": "Enable Target Line",
+  "phantomstaff.config.comment.target_line_enable": "Master switch for the target line. Toggle it right here in the config menu - no keybind required. You may optionally bind toggle_target_line as a quick shortcut.",
+
   "phantomstaff.config.name.enable_phantom_slot": "Enable Phantom Staff Slot",
   "phantomstaff.config.prettyName.enable_phantom_slot": "Enable Phantom Staff Slot",
   "phantomstaff.config.comment.enable_phantom_slot": "Swap the physics staff into your hand with a single key press (sends real packets, so the server recognises it); press again to swap back. Prefers the hotbar, then the main inventory; falls back to a client-side-only spawn if you carry no staff (server will not recognise it and left-click locking may kick you).",

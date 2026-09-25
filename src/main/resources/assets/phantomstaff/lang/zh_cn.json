@@ -46,6 +46,10 @@
   "phantomstaff.config.prettyName.toggle_target_line": "开关追踪红线",
   "phantomstaff.config.comment.toggle_target_line": "开关物理结构追踪红线的快捷键。",
 
+  "phantomstaff.config.name.target_line_enable": "启用追踪红线",
+  "phantomstaff.config.prettyName.target_line_enable": "启用追踪红线",
+  "phantomstaff.config.comment.target_line_enable": "追踪红线总开关。在配置界面里直接开关即可，无需绑定任何按键。另可给 toggle_target_line 绑一个键作为快速切换的快捷方式。",
+
   "phantomstaff.config.name.enable_phantom_slot": "启用幽灵法杖槽位",
   "phantomstaff.config.prettyName.enable_phantom_slot": "启用幽灵法杖槽位",
   "phantomstaff.config.comment.enable_phantom_slot": "按一下热键把物理法杖换到手上（发真实数据包，服务端认可），再按一下换回。优先从快捷栏切换，其次从主背包交换；背包里没有法杖时退化为本地生成（服务端不认可，左键固定可能被踢）。",
