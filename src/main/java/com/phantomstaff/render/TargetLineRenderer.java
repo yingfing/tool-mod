@@ -6,13 +6,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -107,7 +107,7 @@ public class TargetLineRenderer {
 
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
-        Level level = mc.level;
+        ClientLevel level = (ClientLevel) mc.level;
         if (player == null || level == null || mc.screen != null) return;
 
         // getPartialTick() 返回 vanilla DeltaTracker，渲染用的部分刻度需取 float
