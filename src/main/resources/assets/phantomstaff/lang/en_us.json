@@ -48,11 +48,11 @@
 
   "phantomstaff.config.name.enable_phantom_slot": "Enable Phantom Staff Slot",
   "phantomstaff.config.prettyName.enable_phantom_slot": "Enable Phantom Staff Slot",
-  "phantomstaff.config.comment.enable_phantom_slot": "Stamp the physics staff into the currently selected hotbar slot on key press. Client-side only; persists until the server refreshes that slot. Relies on the old Aeronautics server trusting the client.",
+  "phantomstaff.config.comment.enable_phantom_slot": "Swap the physics staff into your hand with a single key press (sends real packets, so the server recognises it); press again to swap back. Prefers the hotbar, then the main inventory; falls back to a client-side-only spawn if you carry no staff (server will not recognise it and left-click locking may kick you).",
 
-  "phantomstaff.config.name.phantom_slot_toggle": "Toggle Phantom Staff Slot",
-  "phantomstaff.config.prettyName.phantom_slot_toggle": "Toggle Phantom Staff Slot",
-  "phantomstaff.config.comment.phantom_slot_toggle": "Stamp the staff into / clear it from the selected hotbar slot (default B).",
+  "phantomstaff.config.name.phantom_slot_toggle": "Swap Staff / Swap Back",
+  "phantomstaff.config.prettyName.phantom_slot_toggle": "Swap Staff / Swap Back",
+  "phantomstaff.config.comment.phantom_slot_toggle": "Swap the physics staff into your hand, or swap it back (default B).",
 
   "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] Server runs Create Aeronautics. The phantom staff slot relies on the old client-trusted server build; a newer build may reject the staff actions."
 }

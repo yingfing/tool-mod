@@ -48,11 +48,11 @@
 
   "phantomstaff.config.name.enable_phantom_slot": "启用幽灵法杖槽位",
   "phantomstaff.config.prettyName.enable_phantom_slot": "启用幽灵法杖槽位",
-  "phantomstaff.config.comment.enable_phantom_slot": "按键把物理法杖「盖」进当前选中的快捷栏槽位（纯客户端）。盖入后一直保留，直到服务端刷新该槽位才消失。依赖老版 Aeronautics 服务端信任客户端的老 bug。",
+  "phantomstaff.config.comment.enable_phantom_slot": "按一下热键把物理法杖换到手上（发真实数据包，服务端认可），再按一下换回。优先从快捷栏切换，其次从主背包交换；背包里没有法杖时退化为本地生成（服务端不认可，左键固定可能被踢）。",
 
-  "phantomstaff.config.name.phantom_slot_toggle": "盖入/取消幽灵法杖槽位",
-  "phantomstaff.config.prettyName.phantom_slot_toggle": "盖入/取消幽灵法杖槽位",
-  "phantomstaff.config.comment.phantom_slot_toggle": "把法杖盖入当前选中槽位 / 再次按下取消（默认 B）。",
+  "phantomstaff.config.name.phantom_slot_toggle": "切换/换回幽灵法杖",
+  "phantomstaff.config.prettyName.phantom_slot_toggle": "切换/换回幽灵法杖",
+  "phantomstaff.config.comment.phantom_slot_toggle": "把法杖换到手上 / 换回原物品（默认 B）。",
 
   "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] 服务器运行 Create Aeronautics。幽灵法杖槽位依赖「老版服务端信任客户端」的特性，新版服务端可能会拒绝法杖操作。"
 }
