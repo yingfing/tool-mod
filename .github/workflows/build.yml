@@ -5,6 +5,15 @@ on:
     branches: [ '1.21.1' ]
     tags: [ 'v*' ]
   workflow_dispatch:
+    inputs:
+      minecraft_version:
+        description: 'Minecraft 版本（覆盖 gradle.properties）'
+        required: false
+        default: '1.21.1'
+      neo_version:
+        description: 'NeoForge 版本（覆盖 gradle.properties）'
+        required: false
+        default: '21.1.219'
 
 # 发 Release 需要写仓库内容的权限
 permissions:
@@ -31,7 +40,17 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build
-        run: ./gradlew build --no-daemon --stacktrace
+        shell: bash
+        run: |
+          args=()
+          if [[ -n "${{ inputs.minecraft_version }}" ]]; then
+            args+=("-Pminecraft_version=${{ inputs.minecraft_version }}")
+          fi
+          if [[ -n "${{ inputs.neo_version }}" ]]; then
+            args+=("-Pneo_version=${{ inputs.neo_version }}")
+          fi
+          echo "Build args: ${args[@]:-<default>}"
+          ./gradlew build --no-daemon --stacktrace "${args[@]}"
 
       - name: Upload Jar (Artifacts)
         uses: actions/upload-artifact@v7

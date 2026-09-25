@@ -1,0 +1,51 @@
+{
+  "phantomstaff.config.title": "Phantom Staff Slot",
+
+  "phantomstaff.config.category.general": "General",
+  "phantomstaff.config.category.target_line": "Target Line",
+  "phantomstaff.config.category.hotkeys": "Hotkeys",
+
+  "phantomstaff.config.name.enable_phantom_slot": "Enable Phantom Slot",
+  "phantomstaff.config.prettyName.enable_phantom_slot": "Enable Phantom Slot",
+  "phantomstaff.config.comment.enable_phantom_slot": "Show and activate the virtual 10th hotbar slot (physics staff).",
+
+  "phantomstaff.config.name.allow_scroll_to_slot_10": "Allow Scroll to Slot 10",
+  "phantomstaff.config.prettyName.allow_scroll_to_slot_10": "Allow Scroll to Slot 10",
+  "phantomstaff.config.comment.allow_scroll_to_slot_10": "Allow the mouse wheel to cycle to the virtual 10th slot.",
+
+  "phantomstaff.config.name.render_virtual_slot": "Render Virtual Slot",
+  "phantomstaff.config.prettyName.render_virtual_slot": "Render Virtual Slot",
+  "phantomstaff.config.comment.render_virtual_slot": "Render the virtual 10th slot icon on the hotbar.",
+
+  "phantomstaff.config.name.warn_on_aeronautics_server": "Warn on Aeronautics Server",
+  "phantomstaff.config.prettyName.warn_on_aeronautics_server": "Warn on Aeronautics Server",
+  "phantomstaff.config.comment.warn_on_aeronautics_server": "Show a compatibility warning after joining a server that runs Create Aeronautics.",
+
+  "phantomstaff.config.name.target_line_color": "Target Line Color",
+  "phantomstaff.config.prettyName.target_line_color": "Target Line Color",
+  "phantomstaff.config.comment.target_line_color": "Core color of the target line (ARGB).",
+
+  "phantomstaff.config.name.target_line_width": "Target Line Width",
+  "phantomstaff.config.prettyName.target_line_width": "Target Line Width",
+  "phantomstaff.config.comment.target_line_width": "Core width of the target line.",
+
+  "phantomstaff.config.name.target_line_max_distance": "Target Line Max Distance",
+  "phantomstaff.config.prettyName.target_line_max_distance": "Target Line Max Distance",
+  "phantomstaff.config.comment.target_line_max_distance": "Maximum tracking distance of the target line in blocks.",
+
+  "phantomstaff.config.name.target_line_through_walls": "Target Line Through Walls",
+  "phantomstaff.config.prettyName.target_line_through_walls": "Target Line Through Walls",
+  "phantomstaff.config.comment.target_line_through_walls": "Always render the target line through terrain. When off it is hidden by blocks.",
+
+  "phantomstaff.config.name.open_config_gui": "Open Config GUI",
+  "phantomstaff.config.prettyName.open_config_gui": "Open Config GUI",
+  "phantomstaff.config.comment.open_config_gui": "Hotkey to open the Phantom Staff config menu.",
+
+  "phantomstaff.config.name.toggle_target_line": "Toggle Target Line",
+  "phantomstaff.config.prettyName.toggle_target_line": "Toggle Target Line",
+  "phantomstaff.config.comment.toggle_target_line": "Hotkey to toggle the physics structure tracking line.",
+
+  "phantomstaff.hud.locked_distance": "Physics structure locked   Distance %s m",
+
+  "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] Server runs Create Aeronautics (network version %s). The virtual 10th slot only works with old server builds; a newer build may kick you."
+}

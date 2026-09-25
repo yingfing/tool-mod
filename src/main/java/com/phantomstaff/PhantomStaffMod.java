@@ -1,5 +1,6 @@
 package com.phantomstaff;
 
+import com.phantomstaff.input.SlotKeyHandler;
 import com.phantomstaff.render.TargetLineRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -22,6 +23,10 @@ public class PhantomStaffMod {
         PhantomStaffConfig.getInstance().init();
         // 注册世界渲染事件：追踪红线
         NeoForge.EVENT_BUS.register(TargetLineRenderer.class);
+        // 数字键 0 直接选中虚拟第10格
+        NeoForge.EVENT_BUS.register(SlotKeyHandler.class);
+        // 加入服务器时的 Aeronautics 兼容性检测与提示
+        NeoForge.EVENT_BUS.register(ServerCompatCheck.class);
         // 启动期兼容性自检与日志
         logCompatibility();
     }

@@ -8,6 +8,7 @@ import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigHandler;
 import fi.dy.masa.malilib.config.ConfigUtils;
 import fi.dy.masa.malilib.config.options.ConfigBoolean;
+import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.config.options.ConfigDouble;
 import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.event.InputEventHandler;
@@ -35,33 +36,43 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
 
     /** 总开关：关闭后虚拟槽位完全不出现 */
     public static final ConfigBoolean ENABLE_PHANTOM_SLOT =
-            new ConfigBoolean("enable_phantom_slot", true,
-                    "启用虚拟第10格（物理法杖槽位）");
+            new ConfigBoolean("enable_phantom_slot", true).apply("phantomstaff.config");
 
     /** 允许滚轮滚到第10格 */
     public static final ConfigBoolean ALLOW_SCROLL_TO_SLOT_10 =
-            new ConfigBoolean("allow_scroll_to_slot_10", true,
-                    "允许鼠标滚轮循环选中第10格");
+            new ConfigBoolean("allow_scroll_to_slot_10", true).apply("phantomstaff.config");
 
     /** 在热栏上渲染第10格图标 */
     public static final ConfigBoolean RENDER_VIRTUAL_SLOT =
-            new ConfigBoolean("render_virtual_slot", true,
-                    "在热栏上渲染第10格图标");
+            new ConfigBoolean("render_virtual_slot", true).apply("phantomstaff.config");
 
-    /** 打开配置菜单的快捷键（默认未绑定，可在菜单里自己设） */
-    public static final ConfigHotkey OPEN_CONFIG_GUI =
-            new ConfigHotkey("open_config_gui", "",
-                    "打开 phantomstaff 配置菜单");
+    /** 加入服务器时检测到 Aeronautics 后的兼容性提示 */
+    public static final ConfigBoolean WARN_ON_AERONAUTICS_SERVER =
+            new ConfigBoolean("warn_on_aeronautics_server", true).apply("phantomstaff.config");
 
-    /** 开关追踪红线的快捷键（默认未绑定） */
-    public static final ConfigHotkey TOGGLE_TARGET_LINE =
-            new ConfigHotkey("toggle_target_line", "",
-                    "开关追踪物理结构的红线");
+    /** 红线核心颜色（ARGB） */
+    public static final ConfigColor TARGET_LINE_COLOR =
+            new ConfigColor("target_line_color", "#FFFF1414").apply("phantomstaff.config");
+
+    /** 红线核心线宽 */
+    public static final ConfigDouble TARGET_LINE_WIDTH =
+            new ConfigDouble("target_line_width", 2.0, 0.5, 16.0).apply("phantomstaff.config");
 
     /** 红线最大追踪距离（方块）。调大可在更远处分辨并锁定你的物理载具 */
     public static final ConfigDouble TARGET_LINE_MAX_DIST =
-            new ConfigDouble("target_line_max_distance", 256.0,
-                    "红线最大追踪距离（方块）。调大可在更远处分辨并锁定你的物理载具");
+            new ConfigDouble("target_line_max_distance", 256.0, 16.0, 4096.0).apply("phantomstaff.config");
+
+    /** 红线是否常显（穿透地形）。关闭后被方块遮挡 */
+    public static final ConfigBoolean TARGET_LINE_THROUGH_WALLS =
+            new ConfigBoolean("target_line_through_walls", true).apply("phantomstaff.config");
+
+    /** 打开配置菜单的快捷键（默认未绑定，可在菜单里自己设） */
+    public static final ConfigHotkey OPEN_CONFIG_GUI =
+            new ConfigHotkey("open_config_gui", "").apply("phantomstaff.config");
+
+    /** 开关追踪红线的快捷键（默认未绑定） */
+    public static final ConfigHotkey TOGGLE_TARGET_LINE =
+            new ConfigHotkey("toggle_target_line", "").apply("phantomstaff.config");
 
     private static final List<IConfigBase> GENERIC_OPTIONS = new ArrayList<>();
     private static final List<ConfigHotkey> HOTKEYS = new ArrayList<>();
@@ -70,7 +81,11 @@ public final class PhantomStaffConfig implements IConfigHandler, IKeybindProvide
         GENERIC_OPTIONS.add(ENABLE_PHANTOM_SLOT);
         GENERIC_OPTIONS.add(ALLOW_SCROLL_TO_SLOT_10);
         GENERIC_OPTIONS.add(RENDER_VIRTUAL_SLOT);
+        GENERIC_OPTIONS.add(WARN_ON_AERONAUTICS_SERVER);
+        GENERIC_OPTIONS.add(TARGET_LINE_COLOR);
+        GENERIC_OPTIONS.add(TARGET_LINE_WIDTH);
         GENERIC_OPTIONS.add(TARGET_LINE_MAX_DIST);
+        GENERIC_OPTIONS.add(TARGET_LINE_THROUGH_WALLS);
         HOTKEYS.add(OPEN_CONFIG_GUI);
         HOTKEYS.add(TOGGLE_TARGET_LINE);
     }

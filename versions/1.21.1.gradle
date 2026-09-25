@@ -1,0 +1,7 @@
+// ===== 版本矩阵：Minecraft 1.21.1 =====
+// 定义该 Minecraft 版本对应的 NeoForge / MaFgLib 版本。
+// 由 build.gradle 按当前构建目标 minecraft_version 动态加载。
+rootProject.ext {
+    buildTargetNeo = "21.1.219"
+    buildTargetMafglib = "0.4.3+mc1.21.1"
+}

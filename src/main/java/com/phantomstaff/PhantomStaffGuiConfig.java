@@ -1,8 +1,7 @@
 package com.phantomstaff;
 
-import fi.dy.masa.malilib.config.options.ConfigBoolean;
-import fi.dy.masa.malilib.config.options.ConfigHotkey;
 import fi.dy.masa.malilib.gui.GuiConfigsBase;
+import fi.dy.masa.malilib.util.StringUtils;
 import net.minecraft.client.gui.screens.Screen;
 
 import javax.annotation.Nullable;
@@ -23,20 +22,21 @@ public class PhantomStaffGuiConfig extends GuiConfigsBase {
     public List<ConfigOptionWrapper> getConfigs() {
         List<ConfigOptionWrapper> list = new ArrayList<>();
 
-        list.add(new ConfigOptionWrapper("通用设置"));
-        for (ConfigBoolean option : List.of(
-                PhantomStaffConfig.ENABLE_PHANTOM_SLOT,
-                PhantomStaffConfig.ALLOW_SCROLL_TO_SLOT_10,
-                PhantomStaffConfig.RENDER_VIRTUAL_SLOT)) {
-            list.add(new ConfigOptionWrapper(option));
-        }
+        list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.general")));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ENABLE_PHANTOM_SLOT));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.ALLOW_SCROLL_TO_SLOT_10));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.RENDER_VIRTUAL_SLOT));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.WARN_ON_AERONAUTICS_SERVER));
 
-        list.add(new ConfigOptionWrapper("快捷键"));
-        for (ConfigHotkey hotkey : List.of(
-                PhantomStaffConfig.OPEN_CONFIG_GUI,
-                PhantomStaffConfig.TOGGLE_TARGET_LINE)) {
-            list.add(new ConfigOptionWrapper(hotkey));
-        }
+        list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.target_line")));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_COLOR));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_WIDTH));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_MAX_DIST));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TARGET_LINE_THROUGH_WALLS));
+
+        list.add(new ConfigOptionWrapper(StringUtils.translate("phantomstaff.config.category.hotkeys")));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.OPEN_CONFIG_GUI));
+        list.add(new ConfigOptionWrapper(PhantomStaffConfig.TOGGLE_TARGET_LINE));
 
         return list;
     }

@@ -46,13 +46,22 @@ public class TargetLineRenderer {
     /** 本帧目标距离（米/方块），供 HUD 文字提示使用 */
     public static double lastDistance = 0.0;
 
-    // ===== 自定义线渲染类型：关闭深度测试 -> 穿透地形可见 =====
+    // ===== 自定义线渲染类型：由配置决定颜色/线宽/是否穿透地形 =====
+
+    /** 缓存当前的三个渲染层，配置变化时重建，避免每帧 new RenderType */
+    private static RenderType lineOutline;
+    private static RenderType lineGlow;
+    private static RenderType lineCore;
+    private static int cachedColor = Integer.MIN_VALUE;
+    private static double cachedWidth = -1.0;
+    private static boolean cachedThroughWalls;
 
     private static RenderType makeLineType(String name, double width,
-                                           RenderStateShard.TransparencyStateShard transparency) {
+                                           RenderStateShard.TransparencyStateShard transparency,
+                                           RenderStateShard.DepthTestStateShard depthTest) {
         RenderType.CompositeState state = RenderType.CompositeState.builder()
                 .setLineState(new RenderStateShard.LineStateShard(OptionalDouble.of(width)))
-                .setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
+                .setDepthTestState(depthTest)
                 .setCullState(RenderStateShard.NO_CULL)
                 .setTransparencyState(transparency)
                 .createCompositeState(false);
@@ -60,15 +69,33 @@ public class TargetLineRenderer {
                 VertexFormat.Mode.LINES, 256, false, false, state);
     }
 
-    /** 黑色外描边（最宽，置于最底层） */
-    private static final RenderType LINE_OUTLINE =
-            makeLineType("ps_target_outline", 6.0, RenderStateShard.NO_TRANSPARENCY);
-    /** 红色叠加发光层（中等宽度，加色混合产生发光感） */
-    private static final RenderType LINE_GLOW =
-            makeLineType("ps_target_glow", 4.0, RenderStateShard.ADDITIVE_TRANSPARENCY);
-    /** 亮红核心线（最细、最亮） */
-    private static final RenderType LINE_CORE =
-            makeLineType("ps_target_core", 2.0, RenderStateShard.NO_TRANSPARENCY);
+    /** 读取配置并在必要时重建渲染层。颜色/线宽/穿透开关任一变化都会触发重建。 */
+    private static void refreshLineTypes() {
+        int color = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_COLOR.getIntegerValue();
+        double width = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_WIDTH.getDoubleValue();
+        boolean throughWalls = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_THROUGH_WALLS.getBooleanValue();
+
+        if (lineCore != null && color == cachedColor && width == cachedWidth && throughWalls == cachedThroughWalls) {
+            return;
+        }
+        cachedColor = color;
+        cachedWidth = width;
+        cachedThroughWalls = throughWalls;
+
+        RenderStateShard.DepthTestStateShard depthTest = throughWalls
+                ? RenderStateShard.NO_DEPTH_TEST
+                : RenderStateShard.LEQUAL_DEPTH_TEST;
+
+        // 黑色外描边（最宽，置于最底层）
+        lineOutline = makeLineType("ps_target_outline", width + 4.0,
+                RenderStateShard.NO_TRANSPARENCY, depthTest);
+        // 红色叠加发光层（中等宽度，加色混合产生发光感）
+        lineGlow = makeLineType("ps_target_glow", width + 2.0,
+                RenderStateShard.ADDITIVE_TRANSPARENCY, depthTest);
+        // 亮红核心线（最细、最亮）
+        lineCore = makeLineType("ps_target_core", width,
+                RenderStateShard.NO_TRANSPARENCY, depthTest);
+    }
 
     @SubscribeEvent
     public static void onRenderLevel(RenderLevelStageEvent event) {
@@ -89,6 +116,8 @@ public class TargetLineRenderer {
         TargetInfo info = findTarget(mc, player, eye, partialTick, maxDist);
         if (info == null) return;
 
+        refreshLineTypes();
+
         lastDistance = eye.distanceTo(info.pos);
         if (info.isPhysics) foundPhysics = true;
 
@@ -100,13 +129,24 @@ public class TargetLineRenderer {
 
         Vec3 dir = info.pos.subtract(eye).normalize();
 
+        fi.dy.masa.malilib.util.Color4f c = com.phantomstaff.PhantomStaffConfig.TARGET_LINE_COLOR.getColor();
+        int cr = toByte(c.r);
+        int cg = toByte(c.g);
+        int cb = toByte(c.b);
+        int ca = toByte(c.a);
+
         MultiBufferSource.BufferSource buffers = mc.renderBuffers().bufferSource();
-        drawLine(buffers, pose, eye, info.pos, LINE_OUTLINE, 0, 0, 0, 220, dir);
-        drawLine(buffers, pose, eye, info.pos, LINE_GLOW, 255, 30, 30, 90, dir);
-        drawLine(buffers, pose, eye, info.pos, LINE_CORE, 255, 20, 20, 255, dir);
+        drawLine(buffers, pose, eye, info.pos, lineOutline, 0, 0, 0, 220, dir);
+        drawLine(buffers, pose, eye, info.pos, lineGlow, cr, cg, cb, Math.min(90, ca), dir);
+        drawLine(buffers, pose, eye, info.pos, lineCore, cr, cg, cb, ca, dir);
         buffers.endBatch();
 
         pose.popPose();
+    }
+
+    private static int toByte(float value) {
+        int v = Math.round(value * 255.0f);
+        return Math.max(0, Math.min(255, v));
     }
 
     /** HUD 文字提示：锁定到物理结构时，在准星上方显示距离 */
@@ -116,7 +156,8 @@ public class TargetLineRenderer {
 
         Minecraft mc = Minecraft.getInstance();
         GuiGraphics g = event.getGuiGraphics();
-        String text = "已锁定物理结构   距离 " + String.format(Locale.US, "%.1f", lastDistance) + " m";
+        String text = fi.dy.masa.malilib.util.StringUtils.translate(
+                "phantomstaff.hud.locked_distance", String.format(Locale.US, "%.1f", lastDistance));
 
         int sw = mc.getWindow().getGuiScaledWidth();
         int sh = mc.getWindow().getGuiScaledHeight();

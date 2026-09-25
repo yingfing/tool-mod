@@ -1,0 +1,51 @@
+{
+  "phantomstaff.config.title": "虚拟物理法杖槽位",
+
+  "phantomstaff.config.category.general": "通用设置",
+  "phantomstaff.config.category.target_line": "追踪红线",
+  "phantomstaff.config.category.hotkeys": "快捷键",
+
+  "phantomstaff.config.name.enable_phantom_slot": "启用虚拟第10格",
+  "phantomstaff.config.prettyName.enable_phantom_slot": "启用虚拟第10格",
+  "phantomstaff.config.comment.enable_phantom_slot": "显示并启用虚拟第10格（物理法杖槽位）。",
+
+  "phantomstaff.config.name.allow_scroll_to_slot_10": "允许滚轮到第10格",
+  "phantomstaff.config.prettyName.allow_scroll_to_slot_10": "允许滚轮到第10格",
+  "phantomstaff.config.comment.allow_scroll_to_slot_10": "允许鼠标滚轮循环选中虚拟第10格。",
+
+  "phantomstaff.config.name.render_virtual_slot": "渲染第10格图标",
+  "phantomstaff.config.prettyName.render_virtual_slot": "渲染第10格图标",
+  "phantomstaff.config.comment.render_virtual_slot": "在热栏上渲染虚拟第10格图标。",
+
+  "phantomstaff.config.name.warn_on_aeronautics_server": "Aeronautics 服务器提示",
+  "phantomstaff.config.prettyName.warn_on_aeronautics_server": "Aeronautics 服务器提示",
+  "phantomstaff.config.comment.warn_on_aeronautics_server": "加入装有 Create Aeronautics 的服务器后弹出一次兼容性提醒。",
+
+  "phantomstaff.config.name.target_line_color": "红线颜色",
+  "phantomstaff.config.prettyName.target_line_color": "红线颜色",
+  "phantomstaff.config.comment.target_line_color": "追踪红线的核心颜色（ARGB）。",
+
+  "phantomstaff.config.name.target_line_width": "红线线宽",
+  "phantomstaff.config.prettyName.target_line_width": "红线线宽",
+  "phantomstaff.config.comment.target_line_width": "追踪红线的核心线宽。",
+
+  "phantomstaff.config.name.target_line_max_distance": "红线最大距离",
+  "phantomstaff.config.prettyName.target_line_max_distance": "红线最大距离",
+  "phantomstaff.config.comment.target_line_max_distance": "红线最大追踪距离（方块）。调大可在更远处分辨并锁定你的物理载具。",
+
+  "phantomstaff.config.name.target_line_through_walls": "红线常显（穿透地形）",
+  "phantomstaff.config.prettyName.target_line_through_walls": "红线常显（穿透地形）",
+  "phantomstaff.config.comment.target_line_through_walls": "红线始终穿透地形显示；关闭后被方块遮挡。",
+
+  "phantomstaff.config.name.open_config_gui": "打开配置菜单",
+  "phantomstaff.config.prettyName.open_config_gui": "打开配置菜单",
+  "phantomstaff.config.comment.open_config_gui": "打开 Phantom Staff 配置菜单的快捷键。",
+
+  "phantomstaff.config.name.toggle_target_line": "开关追踪红线",
+  "phantomstaff.config.prettyName.toggle_target_line": "开关追踪红线",
+  "phantomstaff.config.comment.toggle_target_line": "开关物理结构追踪红线的快捷键。",
+
+  "phantomstaff.hud.locked_distance": "已锁定物理结构   距离 %s m",
+
+  "phantomstaff.msg.aeronautics_warning": "[Phantom Staff] 服务器运行 Create Aeronautics（网络版本 %s）。虚拟第10格仅在旧版服务端可用，新版服务端可能把你踢下线。"
+}

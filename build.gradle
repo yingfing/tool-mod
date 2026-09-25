@@ -11,8 +11,22 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+// ===== 构建目标 =====
+// 按 Minecraft 版本从 versions/{minecraft_version}.gradle 加载版本矩阵，
+// 支持 -Pminecraft_version= 在 CI 面板中切换构建目标（多版本构建）
+def buildTargetMinecraft = providers.gradleProperty("minecraft_version").getOrElse("1.21.1")
+def matrixFile = file("versions/${buildTargetMinecraft}.gradle")
+if (!matrixFile.exists()) {
+    throw new GradleException("找不到版本矩阵文件：${matrixFile}（${buildTargetMinecraft} 不在支持列表内）")
+}
+apply from: matrixFile
+assert hasProperty("buildTargetNeo") : "版本矩阵文件 ${matrixFile} 未定义 buildTargetNeo"
+assert hasProperty("buildTargetMafglib") : "版本矩阵文件 ${matrixFile} 未定义 buildTargetMafglib"
+def buildTargetNeo = providers.gradleProperty("neo_version").getOrElse(String.valueOf(rootProject.ext.buildTargetNeo))
+def buildTargetMafglib = providers.gradleProperty("mafglib_version").getOrElse(String.valueOf(rootProject.ext.buildTargetMafglib))
+
 neoForge {
-    version = neo_version
+    version = buildTargetNeo
     // ModDevGradle 默认使用 Mojang 官方映射
 
     // dev 运行配置（client/server/data），让 Minecraft 与依赖 mod 正确进入编译/运行 classpath
@@ -44,7 +58,13 @@ repositories {
 dependencies {
     // MaFgLib 是 MaLiLib 的 NeoForge 移植版，包名沿用 fi.dy.masa.malilib，
     // 因此配置/热键系统直接 import fi.dy.masa.malilib.* 即可，无需再引 malilib。
-    implementation "maven.modrinth:mafglib:0.4.3+mc1.21.1"
+    implementation "maven.modrinth:mafglib:${buildTargetMafglib}"
+}
+
+tasks.register("printBuildTarget") {
+    doLast {
+        println("Build target: Minecraft ${buildTargetMinecraft} / NeoForge ${buildTargetNeo}")
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
