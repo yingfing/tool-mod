@@ -30,6 +30,9 @@ repositories {
 dependencies {
     // 编译期 + 开发环境运行期可用；正式游戏内需单独安装 MaFgLib
     implementation "maven.modrinth:mafglib:0.4.3+mc1.21.1"
+    // MaFgLib 在 Modrinth 上未把 MaLiLib 作为传递依赖发布，
+    // 而本模组的配置/热键系统（fi.dy.masa.malilib.*）直接用到它，必须显式声明。
+    implementation "maven.modrinth:malilib:0.21.10"
 }
 
 tasks.withType(JavaCompile).configureEach {

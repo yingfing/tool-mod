@@ -16,6 +16,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.DeltaTracker;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
 /**
@@ -39,7 +40,7 @@ public class TargetLineRenderer {
         Level level = mc.level;
         if (player == null || level == null || mc.screen != null) return;
 
-        float partialTick = event.getPartialTick();
+        var partialTick = event.getPartialTick();
         Vec3 eye = player.getEyePosition(partialTick);
 
         Vec3 target = findTarget(mc, player, eye, partialTick);
@@ -72,7 +73,7 @@ public class TargetLineRenderer {
     }
 
     /** 优先找视线方向上的物理实体，其次找方块 */
-    private static Vec3 findTarget(Minecraft mc, Player player, Vec3 eye, float partialTick) {
+    private static Vec3 findTarget(Minecraft mc, Player player, Vec3 eye, DeltaTracker partialTick) {
         Vec3 look = player.getViewVector(partialTick);
         Vec3 end = eye.add(look.scale(MAX_DIST));
 
@@ -89,12 +90,12 @@ public class TargetLineRenderer {
         if (entityHit != null) {
             Entity e = entityHit.getEntity();
             // 用实体平滑位置 + 包围盒中心，线始终贴在结构中心
-            Vec3 pos = e.getLerpedPos(partialTick);
+            Vec3 pos = e.getPosition(partialTick);
             return new Vec3(pos.x, pos.y + e.getBbHeight() / 2.0, pos.z);
         }
 
         // 兜底：方块视线命中
-        BlockHitResult blockHit = player.level.clip(
+        BlockHitResult blockHit = player.level().clip(
                 new ClipContext(eye, end, ClipContext.Block.OUTLINE, ClipContext.Fluid.NONE, player));
         if (blockHit != null && blockHit.getType() != HitResult.Type.MISS) {
             return blockHit.getLocation();
