@@ -207,7 +207,7 @@ public class TargetLineRenderer {
      */
     private static void drawEdgeArrows(Minecraft mc, ClientLevel level, float partialTick,
                                        int sw, int sh, GuiGraphics g) {
-        Camera camera = mc.gameRenderer().getMainCamera();
+        Camera camera = mc.gameRenderer.getMainCamera();
         Vec3 camPos = camera.getPosition();
         // 相机基向量（返回 Vector3f）：left 指向屏幕左、up 指向上、forward 指向前方
         Vector3f left = camera.getLeftVector();
